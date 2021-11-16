@@ -1,0 +1,60 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "4f4a49707d9f406cce297db78286f2d0",
+    "packages": [
+        {
+            "name": "cleverreach/integration-core",
+            "version": "v3.3.4",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:cleverreach/logeecore.git",
+                "reference": "ec896ee71b493aaa0dc9760c75b79bcf66c5edf1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cleverreach/logeecore/zipball/ec896ee71b493aaa0dc9760c75b79bcf66c5edf1",
+                "reference": "ec896ee71b493aaa0dc9760c75b79bcf66c5edf1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.29"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Logeecom\\Infrastructure\\": "src/Infrastructure",
+                    "CleverReach\\BusinessLogic\\": "src/BusinessLogic"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Logeecom\\Tests\\Infrastructure\\": "tests/Infrastructure",
+                    "CleverReach\\Tests\\BusinessLogic\\": "tests/BusinessLogic"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "CleverReach integrations core library",
+            "time": "2021-09-07T07:48:32+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": ">=5.3"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.1.0"
+}

@@ -1,0 +1,20 @@
+{
+  "autoload": {
+    "psr-4": {
+      "CleverReachIntegration\\": "classes/",
+      "Logeecom\\": "vendor/cleverreach/src/Infrastructure",
+      "CleverReach\\": "vendor/cleverreach/src/BusinessLogic"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "no-api": true,
+      "url": "git@github.com:cleverreach/logeecore.git"
+    }
+  ],
+  "require": {
+    "php": ">=5.3",
+    "cleverreach/integration-core": "3.3.4"
+  }
+}
