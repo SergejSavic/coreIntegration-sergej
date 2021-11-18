@@ -2,17 +2,21 @@
 
 namespace CleverReachIntegration\Infrastructure;
 
-use Logeecom\Infrastructure\BootstrapComponent as InfrastructureBootstrap;
+use CleverReach\BusinessLogic\BootstrapComponent as BusinessLogicBootstrap;
+use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
+use Logeecom\Infrastructure\TaskExecution\QueueItem;
+use CleverReachIntegration\BusinessLogic\Repositories\BaseRepository;
+use CleverReachIntegration\BusinessLogic\Repositories\ConfigRepository;
+use CleverReachIntegration\BusinessLogic\Repositories\ProcessRepository;
+use Logeecom\Infrastructure\Configuration\ConfigEntity;
+use Logeecom\Infrastructure\ORM\RepositoryRegistry;
 use Logeecom\Infrastructure\ServiceRegister;
-use CleverReachIntegration\BusinessLogic\DemoService;
+use CleverReachIntegration\BusinessLogic\Services\DemoService;
+use CleverReachIntegration\BusinessLogic\Services\DemoServiceInterface;
+use Logeecom\Infrastructure\TaskExecution\Process;
 
-class BootstrapComponent extends InfrastructureBootstrap
+class BootstrapComponent extends BusinessLogicBootstrap
 {
-    public static function init()
-    {
-        parent::init();
-    }
-
     /**
      * Initializes services and utilities.
      */
@@ -21,11 +25,24 @@ class BootstrapComponent extends InfrastructureBootstrap
         parent::initServices();
 
         ServiceRegister::registerService(
-            DemoService::CLASS_NAME,
+            DemoServiceInterface::CLASS_NAME,
             function () {
                 return new DemoService();
             }
         );
     }
+
+    /**
+     * @throws \Logeecom\Infrastructure\ORM\Exceptions\RepositoryClassException
+     */
+    public static function initRepositories()
+    {
+        parent::initRepositories();
+
+        RepositoryRegistry::registerRepository(ConfigEntity::CLASS_NAME, ConfigRepository::getClassName());
+        RepositoryRegistry::registerRepository(Process::CLASS_NAME, ProcessRepository::getClassName());
+        RepositoryRegistry::registerRepository(QueueItem::CLASS_NAME, QueueItemRepository::getClassName());
+    }
+
 
 }

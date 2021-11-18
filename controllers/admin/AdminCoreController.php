@@ -2,7 +2,7 @@
 
 use Logeecom\Infrastructure\Http\HttpClient;
 use Logeecom\Infrastructure\ServiceRegister;
-use CleverReachIntegration\BusinessLogic\DemoService;
+use CleverReachIntegration\BusinessLogic\Services\DemoServiceInterface;
 use Logeecom\Infrastructure\Http;
 use CleverReachIntegration\Infrastructure\BootstrapComponent;
 
@@ -13,21 +13,28 @@ class AdminCoreController extends ModuleAdminController
 {
     /**
      * Initialize bootstrap and parent constructor
+     * @throws \Logeecom\Infrastructure\ORM\Exceptions\RepositoryClassException
      */
     public function __construct()
     {
         $this->bootstrap = true;
         BootstrapComponent::initServices();
+        BootstrapComponent::initRepositories();
         parent::__construct();
     }
 
     /**
      * @throws SmartyException
+     * @throws \Logeecom\Infrastructure\ORM\Exceptions\RepositoryNotRegisteredException
      */
     public function initContent()
     {
-        $demoService = ServiceRegister::getService(DemoService::CLASS_NAME);
-        $this->setTemplateFile('origin.tpl', array("message" => $demoService->getMessage()));
+        $demoService = ServiceRegister::getService(DemoServiceInterface::CLASS_NAME);
+        $msg = $demoService->getMessage();
+        $configRepo = \Logeecom\Infrastructure\ORM\RepositoryRegistry::getRepository(\Logeecom\Infrastructure\Configuration\ConfigEntity::CLASS_NAME);
+        $className = $configRepo::getClassName();
+        $table = $className::getTableName();
+        $this->setTemplateFile('origin.tpl', array());
     }
 
     /**
