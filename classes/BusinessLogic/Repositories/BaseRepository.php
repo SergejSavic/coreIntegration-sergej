@@ -44,14 +44,46 @@ class BaseRepository implements RepositoryInterface
 
     /**
      * @param QueryFilter|null $filter
-     * @return array|bool|Entity[]|\mysqli_result|\PDOStatement|resource|null
+     * @return array|Entity[]
      * @throws \PrestaShopDatabaseException
      */
     public function select(QueryFilter $filter = null)
     {
         $query = '
-            SELECT c.*
-            FROM ' . static::getTableName() . ' c';
+            SELECT *
+            FROM ' . static::getTableName() . ' ';
+
+        $query .= $this->where($filter);
+        $query .= $this->orderBy($filter);
+        $query .= $this->limit($filter);
+
+        $records = \Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
+
+        return !empty($this->transformEntities($records)) ? $this->transformEntities($records) : array();
+    }
+
+    /**
+     * @param QueryFilter|null $filter
+     * @return Entity|mixed|null
+     * @throws \PrestaShopDatabaseException
+     */
+    public function selectOne(QueryFilter $filter = null)
+    {
+        $filter->setLimit(1);
+        $record = $this->select($filter);
+
+        return !empty($record) ? $record[0] : null;
+    }
+
+    /**
+     * @param QueryFilter|null $filter
+     * @param array $columns
+     * @return array|bool|\mysqli_result|\PDOStatement|resource|null
+     * @throws \PrestaShopDatabaseException
+     */
+    public function selectSpecificColumns(QueryFilter $filter = null, array $columns)
+    {
+        $query = 'SELECT ' . implode(',', $columns) . ' FROM ' . static::getTableName() . ' ';
 
         $query .= $this->where($filter);
         $query .= $this->orderBy($filter);
@@ -61,28 +93,25 @@ class BaseRepository implements RepositoryInterface
     }
 
     /**
-     * @param QueryFilter|null $filter
-     * @return array|bool|Entity|object|null
-     * @throws \PrestaShopDatabaseException
-     */
-    public function selectOne(QueryFilter $filter = null)
-    {
-        $filter->setLimit(1);
-
-        return ($this->select($filter))[0];
-    }
-
-    /**
      * @param Entity $entity
-     * @return bool|int
+     * @return int|null
      * @throws \PrestaShopDatabaseException
+     * @throws \Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException
      */
     public function save(Entity $entity)
     {
         $properties = $this->getDataForInsertOrUpdate($entity);
         $tableName = $this->getTableWithoutPrefix();
+        $result = \Db::getInstance(_PS_USE_SQL_SLAVE_)->insert($tableName, $properties);
+        $id = null;
 
-        return \Db::getInstance(_PS_USE_SQL_SLAVE_)->insert($tableName, $properties);
+        if ($result) {
+            $filter = new QueryFilter();
+            $filter->orderBy('id', QueryFilter::ORDER_DESC);
+            $id = ($this->selectOne($filter))->getId();
+        }
+
+        return (int)$id;
     }
 
     /**
@@ -118,7 +147,7 @@ class BaseRepository implements RepositoryInterface
     {
         $query = '
             SELECT count(*) as count
-            FROM ' . static::getTableName() . ' c';
+            FROM ' . static::getTableName() . ' ';
 
         $query .= $this->where($filter);
 
@@ -149,6 +178,26 @@ class BaseRepository implements RepositoryInterface
         }
 
         return $query;
+    }
+
+    /**
+     * @param $columnName
+     * @param $data
+     * @return string
+     */
+    protected function whereNotIn($columnName, $data)
+    {
+        return $columnName . ' NOT IN(' . $this->getStringFromArray('', $data, true) . ') ';
+    }
+
+    /**
+     * @param $columnName
+     * @param $data
+     * @return string
+     */
+    protected function whereIn($columnName, $data)
+    {
+        return $columnName . ' IN(' . $this->getStringFromArray('', $data, true) . ') ';
     }
 
     /**
@@ -200,9 +249,53 @@ class BaseRepository implements RepositoryInterface
             $properties['index_' . $index] = $field;
         }
 
-        $properties['data'] = json_encode($entity->toArray());
+        $properties['data'] = addslashes(json_encode($entity->toArray()));
 
         return $properties;
+    }
+
+    /**
+     * @param array $records
+     * @return array
+     */
+    protected function transformEntities(array $records)
+    {
+        $entities = array();
+
+        foreach ($records as $record) {
+            $entity = $this->transformEntity($record['data']);
+            if ($entity !== null) {
+                $entity->setId((int)$record['id']);
+                $entities[] = $entity;
+            }
+        }
+
+        return $entities;
+    }
+
+    /**
+     * @param string $data
+     * @return Entity|null
+     */
+    protected function transformEntity($data)
+    {
+        $jsonEntity = json_decode($data, true);
+        $jsonEntity['class_name'] = '\\' . $jsonEntity['class_name'];
+
+        if (empty($jsonEntity)) {
+            return null;
+        }
+
+        if (array_key_exists('class_name', $jsonEntity)) {
+            $entity = new $jsonEntity['class_name'];
+        } else {
+            $entity = new $this->entity;
+        }
+
+        /** @var Entity $entity */
+        $entity->inflate($jsonEntity);
+
+        return $entity;
     }
 
     /**
@@ -211,5 +304,54 @@ class BaseRepository implements RepositoryInterface
     protected function getTableWithoutPrefix()
     {
         return substr(static::getTableName(), 3);
+    }
+
+
+    /**
+     * @param string $optionalString
+     * @param $dataArray
+     * @return string
+     */
+    protected function getStringFromArray($stringHelper, $dataArray, $isString)
+    {
+        $string = '';
+        $iterator = 1;
+        foreach ($dataArray as $index => $data) {
+            if ($isString) {
+                $string .= "'";
+            }
+            $string .= $stringHelper . $data;
+
+            if ($isString) {
+                $string .= "'";
+            }
+
+            if ($iterator !== count($dataArray)) {
+                $string .= ',';
+            }
+
+            $iterator++;
+        }
+
+        return $string;
+    }
+
+
+    /**
+     * @param $arrayOfArrays
+     * returns array of data from array of arrays
+     * @return array
+     */
+    protected function getArray($arrayOfArrays)
+    {
+        $arrayOfData = array();
+
+        foreach ($arrayOfArrays as $array) {
+            foreach ($array as $data) {
+                $arrayOfData[] = $data;
+            }
+        }
+
+        return $arrayOfData;
     }
 }
