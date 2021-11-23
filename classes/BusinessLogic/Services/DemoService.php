@@ -49,20 +49,21 @@ class DemoService implements DemoServiceInterface
 //        $id = $repository->save($configEntity);
 //
         $filter = new QueryFilter();
-        $filter->where('name', Operators::EQUALS, 'name2');
-        $filter->orderBy('id', QueryFilter::ORDER_DESC);
+        $filter->where('id', Operators::EQUALS, '15');
+        $filter->orderBy('name', QueryFilter::ORDER_DESC);
         $filter->setLimit(2);
-        $filter->setOffset(1);
+        //$filter->setOffset(1);
         /** @var ConfigEntity $configEntity */
         $configEntity = $repository->selectOne($filter);
 
         /** @var Configuration $configService */
         $configService = ServiceRegister::getService(Configuration::CLASS_NAME);
-        $configService->setMinLogLevelGlobal(Logger::WARNING);
+        $configService->setMinLogLevelGlobal(Logger::DEBUG);
 
         //Logger::logInfo('Info', 'Integration');
-        Logger::logWarning('Warning', 'Integration');
-        Logger::logError('Error', 'Integration');
+        //Logger::logWarning('Warning', 'Integration');
+        //Logger::logError('Error', 'Integration');
+        //Logger::logDebug('Debug', 'Integration');
 
         return "This is new message";
     }

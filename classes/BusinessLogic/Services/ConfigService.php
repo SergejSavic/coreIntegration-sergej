@@ -47,9 +47,13 @@ class ConfigService extends Configuration
         return 'Core Integration';
     }
 
+    /**
+     * @param string $guid
+     * @return string
+     */
     public function getAsyncProcessUrl($guid)
     {
-        // TODO: Implement getAsyncProcessUrl() method.
+        return Tools::getHttpHost(true) . __PS_BASE_URI__ . 'en/module/core/callback';
     }
 
 }

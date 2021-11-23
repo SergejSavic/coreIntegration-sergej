@@ -171,8 +171,13 @@ class BaseRepository implements RepositoryInterface
                 if ($index !== 0) {
                     $query .= $condition->getChainOperator() . ' ';
                 }
-                $query .= ' '. 'index_' . $indexes[$condition->getColumn()]
-                    . ' ' . $condition->getOperator();
+
+                if ($indexes[$condition->getColumn()] !== null) {
+                    $query .= ' ' . 'index_' . $indexes[$condition->getColumn()]
+                        . ' ' . $condition->getOperator();
+                } else {
+                    $query .= ' ' . $condition->getColumn() . ' ' . $condition->getOperator();
+                }
 
                 if ($condition->getValue() !== "") {
                     $query .= "'" . $condition->getValue() . "'";
@@ -211,10 +216,16 @@ class BaseRepository implements RepositoryInterface
      */
     protected function orderBy(QueryFilter $filter = null)
     {
+        $indexes = IndexHelper::mapFieldsToIndexes(new $this->entity);
+        $column = $filter->getOrderByColumn();
         $query = '';
 
-        if ($filter->getOrderByColumn() !== null) {
-            $query .= ' ORDER BY ' . $filter->getOrderByColumn() . ' ' . $filter->getOrderDirection();
+        if ($column !== null) {
+            if ($indexes[$column] !== null) {
+                $query .= ' ORDER BY ' . 'index_' . $indexes[$column] . ' ' . $filter->getOrderDirection();
+            } else {
+                $query .= ' ORDER BY ' . $column . ' ' . $filter->getOrderDirection();
+            }
         }
 
         return $query;
