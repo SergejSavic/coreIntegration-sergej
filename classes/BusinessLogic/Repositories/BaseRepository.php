@@ -59,7 +59,7 @@ class BaseRepository implements RepositoryInterface
 
         $records = \Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
 
-        return !empty($this->transformEntities($records)) ? $this->transformEntities($records) : array();
+        return ($records !== false && !empty($this->transformEntities($records))) ? $this->transformEntities($records) : array();
     }
 
     /**
@@ -161,7 +161,7 @@ class BaseRepository implements RepositoryInterface
     protected function where(QueryFilter $filter = null)
     {
         $conditions = $filter->getConditions();
-
+        $indexes = IndexHelper::mapFieldsToIndexes(new $this->entity);
         $query = '';
 
         if (!empty($conditions)) {
@@ -171,9 +171,14 @@ class BaseRepository implements RepositoryInterface
                 if ($index !== 0) {
                     $query .= $condition->getChainOperator() . ' ';
                 }
-                $query .= $condition->getColumn()
-                    . ' ' . $condition->getOperator()
-                    . "'" . $condition->getValue() . "'";
+                $query .= ' '. 'index_' . $indexes[$condition->getColumn()]
+                    . ' ' . $condition->getOperator();
+
+                if ($condition->getValue() !== "") {
+                    $query .= "'" . $condition->getValue() . "'";
+                } else {
+                    $query .= "'" . "'";
+                }
             }
         }
 

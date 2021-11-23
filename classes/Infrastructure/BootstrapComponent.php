@@ -4,14 +4,18 @@ namespace CleverReachIntegration\Infrastructure;
 
 use CleverReach\BusinessLogic\BootstrapComponent as BusinessLogicBootstrap;
 use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
+use CleverReach\BusinessLogic\Configuration\Configuration;
+use Logeecom\Infrastructure\Logger\LoggerConfiguration;
+use Logeecom\Infrastructure\Logger\Interfaces\ShopLoggerAdapter;
 use Logeecom\Infrastructure\TaskExecution\QueueItem;
-use CleverReachIntegration\BusinessLogic\Repositories\BaseRepository;
 use CleverReachIntegration\BusinessLogic\Repositories\ConfigRepository;
 use CleverReachIntegration\BusinessLogic\Repositories\ProcessRepository;
 use Logeecom\Infrastructure\Configuration\ConfigEntity;
 use Logeecom\Infrastructure\ORM\RepositoryRegistry;
 use Logeecom\Infrastructure\ServiceRegister;
+use CleverReachIntegration\BusinessLogic\Services\LoggerService;
 use CleverReachIntegration\BusinessLogic\Services\DemoService;
+use CleverReachIntegration\BusinessLogic\Services\ConfigService as ConfigurationService;
 use CleverReachIntegration\BusinessLogic\Services\DemoServiceInterface;
 use Logeecom\Infrastructure\TaskExecution\Process;
 
@@ -30,10 +34,25 @@ class BootstrapComponent extends BusinessLogicBootstrap
                 return new DemoService();
             }
         );
+
+        ServiceRegister::registerService(
+            Configuration::CLASS_NAME,
+            function () {
+                return ConfigurationService::getInstance();
+            }
+        );
+
+        ServiceRegister::registerService(
+            ShopLoggerAdapter::CLASS_NAME,
+            function () {
+                return new LoggerService();
+            }
+        );
     }
 
     /**
      * @throws \Logeecom\Infrastructure\ORM\Exceptions\RepositoryClassException
+     * Initializes repositories
      */
     public static function initRepositories()
     {

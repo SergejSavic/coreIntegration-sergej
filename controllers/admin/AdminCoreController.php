@@ -12,7 +12,7 @@ use CleverReachIntegration\Infrastructure\BootstrapComponent;
 class AdminCoreController extends ModuleAdminController
 {
     /**
-     * Initialize bootstrap and parent constructor
+     * Initializes bootstrap and parent constructor
      * @throws \Logeecom\Infrastructure\ORM\Exceptions\RepositoryClassException
      */
     public function __construct()

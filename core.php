@@ -55,7 +55,6 @@ class Core extends Module
     public function uninstall()
     {
         return parent::uninstall() && $this->dropDatabaseTables();
-
     }
 
     /**
