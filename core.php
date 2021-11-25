@@ -66,14 +66,14 @@ class Core extends Module
             CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'cleverreach_entities` (
             `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
             `type` varchar(100) NOT NULL,
-            `index_1` varchar(100) NOT NULL,
-            `index_2` varchar(100) NOT NULL,
-            `index_3` varchar(100) NOT NULL,
-            `index_4` varchar(100) NOT NULL,
-            `index_5` varchar(100) NOT NULL,
-            `index_6` varchar(100) NOT NULL,
-            `index_7` varchar(100) NOT NULL,
-            `index_8` varchar(100) NOT NULL,
+            `index_1` varchar(100) ,
+            `index_2` varchar(100) ,
+            `index_3` varchar(100) ,
+            `index_4` varchar(100) ,
+            `index_5` varchar(100) ,
+            `index_6` varchar(100) ,
+            `index_7` varchar(100) ,
+            `index_8` varchar(100) ,
             `data` LONGTEXT NOT NULL,
             PRIMARY KEY (`id`)
             ) ENGINE = ' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;') &&
@@ -81,8 +81,8 @@ class Core extends Module
             CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'config_entities` (
             `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
             `type` varchar(100) NOT NULL,
-            `index_1` varchar(100) NOT NULL,
-            `index_2` varchar(100) NOT NULL,
+            `index_1` varchar(100) ,
+            `index_2` varchar(100) ,
             `data` LONGTEXT NOT NULL,
             PRIMARY KEY (`id`)
             ) ENGINE = ' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;') &&
@@ -90,7 +90,7 @@ class Core extends Module
             CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'process_entities` (
             `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
             `type` varchar(100) NOT NULL,
-            `index_1` varchar(100) NOT NULL,
+            `index_1` varchar(100) ,
             `data` LONGTEXT NOT NULL,
             PRIMARY KEY (`id`)
             ) ENGINE = ' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;') &&
@@ -98,14 +98,14 @@ class Core extends Module
             CREATE TABLE IF NOT EXISTS `' . _DB_PREFIX_ . 'queue_item_entities` (
             `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
             `type` varchar(100) NOT NULL,
-            `index_1` varchar(100) NOT NULL,
-            `index_2` varchar(100) NOT NULL,
-            `index_3` varchar(100) NOT NULL,
-            `index_4` varchar(100) NOT NULL,
-            `index_5` varchar(100) NOT NULL,
-            `index_6` varchar(100) NOT NULL,
-            `index_7` varchar(100) NOT NULL,
-            `index_8` varchar(100) NOT NULL,
+            `index_1` varchar(100) ,
+            `index_2` varchar(100) ,
+            `index_3` varchar(100) ,
+            `index_4` varchar(100) ,
+            `index_5` varchar(100) ,
+            `index_6` varchar(100) ,
+            `index_7` varchar(100) ,
+            `index_8` varchar(100) ,
             `data` LONGTEXT NOT NULL,
             PRIMARY KEY (`id`)
             ) ENGINE = ' . _MYSQL_ENGINE_ . ' DEFAULT CHARSET=utf8;');

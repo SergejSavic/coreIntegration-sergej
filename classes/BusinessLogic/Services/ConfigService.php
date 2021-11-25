@@ -53,7 +53,7 @@ class ConfigService extends Configuration
      */
     public function getAsyncProcessUrl($guid)
     {
-        return Tools::getHttpHost(true) . __PS_BASE_URI__ . 'en/module/core/callback';
+        return Tools::getHttpHost(true) . __PS_BASE_URI__ . 'en/module/core/callback?guid='. $guid. '&XDEBUG_SESSION_START=debug';
     }
 
 }

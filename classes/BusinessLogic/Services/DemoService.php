@@ -2,33 +2,44 @@
 
 namespace CleverReachIntegration\BusinessLogic\Services;
 
+use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
 use Logeecom\Infrastructure\Configuration\ConfigEntity;
 use CleverReach\BusinessLogic\Configuration\Configuration;
 use Logeecom\Infrastructure\Logger\Logger;
+use Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException;
+use Logeecom\Infrastructure\ORM\Exceptions\RepositoryNotRegisteredException;
 use Logeecom\Infrastructure\ORM\QueryFilter\Operators;
 use Logeecom\Infrastructure\ORM\QueryFilter\QueryFilter;
 use Logeecom\Infrastructure\ORM\RepositoryRegistry;
 use Logeecom\Infrastructure\ServiceRegister;
 use Logeecom\Infrastructure\Logger\Interfaces\ShopLoggerAdapter;
+use Logeecom\Infrastructure\TaskExecution\Exceptions\QueueStorageUnavailableException;
+use Logeecom\Infrastructure\TaskExecution\Interfaces\AsyncProcessService;
+use Logeecom\Infrastructure\TaskExecution\Interfaces\Priority;
 use Logeecom\Infrastructure\TaskExecution\QueueItem;
+use Logeecom\Infrastructure\TaskExecution\QueueService as BaseQueueService;
+use Logeecom\Infrastructure\AutoTest\AutoTestTask;
+use CleverReachIntegration\BusinessLogic\BasicTask;
 
 class DemoService implements DemoServiceInterface
 {
     /**
      * @return string
-     * @throws \Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException
-     * @throws \Logeecom\Infrastructure\ORM\Exceptions\RepositoryNotRegisteredException
+     * @throws QueryFilterInvalidParamException
+     * @throws RepositoryNotRegisteredException
+     * @throws QueueStorageUnavailableException
      */
     public function getMessage()
     {
         $repository = RepositoryRegistry::getRepository(ConfigEntity::CLASS_NAME);
-//        $queueItemRepo = RepositoryRegistry::getRepository(QueueItem::CLASS_NAME);
+        /** @var QueueItemRepository $queueItemRepo */
+        $queueItemRepo = RepositoryRegistry::getRepository(QueueItem::CLASS_NAME);
 //
-//        $configEntity = new ConfigEntity();
-//        $configEntity->setName('name2');
-//        $configEntity->setValue('test2');
-//        $configEntity->setContext('context2');
-//        //$configEntity->setId(13);
+        $configEntity = new ConfigEntity();
+        $configEntity->setName('name2.1');
+        $configEntity->setValue('test2');
+        $configEntity->setContext('');
+        $configEntity->setId(20);
 //
 //        $queueItem = new QueueItem();
 //        $queueItem->setStatus('queued');
@@ -42,19 +53,30 @@ class DemoService implements DemoServiceInterface
 //        $queueItem->setRetries(0);
 //        $queueItem->setFailureDescription("");
 //
-//        //$repository->save($configEntity);
+       //$repository->save($configEntity);
 //
 //        //$queueItemRepo->saveWithCondition($queueItem, array('index_4' => 'context'));
 //
 //        $id = $repository->save($configEntity);
 //
+
         $filter = new QueryFilter();
-        $filter->where('id', Operators::EQUALS, '15');
-        $filter->orderBy('name', QueryFilter::ORDER_DESC);
-        $filter->setLimit(2);
+        $filter->where('status', Operators::EQUALS, 'queued');
+        $filter->where('queueName', Operators::EQUALS, 'queue2');
+        $filter->orderBy('priority', QueryFilter::ORDER_DESC);
+        //$queueItemEnt = $queueItemRepo->select($filter);
+        //$runningTasks = $queueItemRepo->getRunningQueueNames();
+        //$ids = $queueItemRepo->getQueueIdsForExecution(1, $runningTasks, 2);
+
+//        $filter = new QueryFilter();
+//        $filter->where('id', Operators::EQUALS, '15');
+//        $filter->orderBy('name', QueryFilter::ORDER_DESC);
+//        $filter->setLimit(2);
         //$filter->setOffset(1);
         /** @var ConfigEntity $configEntity */
-        $configEntity = $repository->selectOne($filter);
+        //$configEntity = $repository->selectOne($filter);
+
+        $asyncProcessService = ServiceRegister::getService(AsyncProcessService::CLASS_NAME);
 
         /** @var Configuration $configService */
         $configService = ServiceRegister::getService(Configuration::CLASS_NAME);
@@ -64,6 +86,15 @@ class DemoService implements DemoServiceInterface
         //Logger::logWarning('Warning', 'Integration');
         //Logger::logError('Error', 'Integration');
         //Logger::logDebug('Debug', 'Integration');
+
+        /** @var BaseQueueService $queueService */
+        $queueService = ServiceRegister::getService(BaseQueueService::CLASS_NAME);
+        $autoTest = new AutoTestTask("data");
+        $basicTask = new BasicTask();
+        //$autoTest->execute();
+
+        //$queueService->enqueue('newQueue', $basicTask,'',Priority::LOW);
+        $queueService->enqueue('queue2', $autoTest);
 
         return "This is new message";
     }

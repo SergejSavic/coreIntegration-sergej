@@ -2,6 +2,7 @@
 
 namespace CleverReachIntegration\BusinessLogic\Repositories;
 
+use CleverReachIntegration\BusinessLogic\Services\TransformerService;
 use Logeecom\Infrastructure\ORM\QueryFilter\Operators;
 use Logeecom\Infrastructure\ORM\QueryFilter\QueryFilter;
 use Logeecom\Infrastructure\TaskExecution\Exceptions\QueueItemSaveException;
@@ -104,15 +105,18 @@ class QueueItemRepository extends BaseRepository implements QueueItemRepositoryI
     {
         $filter = new QueryFilter();
         $ids = $this->getQueueIdsForExecution($priority, $runningQueueNames, $limit);
+        $records = array();
 
-        foreach ($ids as $id) {
-            $filter->where('id', Operators::EQUALS, $id);
+        if (count($ids) > 0) {
+            foreach ($ids as $id) {
+                $filter->where('id', Operators::EQUALS, $id);
+            }
+
+            $filter->orderBy('id');
+            $records = $this->select($filter);
         }
 
-        $filter->orderBy('id');
-        $records = $this->select($filter);
-
-        return !empty($records) ? $records : array();
+        return $records;
     }
 
     /**
@@ -125,6 +129,7 @@ class QueueItemRepository extends BaseRepository implements QueueItemRepositoryI
      */
     public function getQueueIdsForExecution($priority, $runningQueueNames, $limit)
     {
+        $priority = TransformerService::transformNumberToString($priority);
         $filter = new QueryFilter();
         $filter->where(self::PRIORITY_INDEX, Operators::EQUALS, $priority);
         $filter->where(self::STATUS_INDEX, Operators::EQUALS, QueueItem::QUEUED);
@@ -169,7 +174,7 @@ class QueueItemRepository extends BaseRepository implements QueueItemRepositoryI
             if ($value === null) {
                 $filter->where($name, Operators::NULL);
             } else {
-                $filter->where($name, Operators::EQUALS, $value ?: '');
+                $filter->where($name, Operators::EQUALS, $value);
             }
         }
 

@@ -17,10 +17,23 @@ use CleverReachIntegration\BusinessLogic\Services\LoggerService;
 use CleverReachIntegration\BusinessLogic\Services\DemoService;
 use CleverReachIntegration\BusinessLogic\Services\ConfigService as ConfigurationService;
 use CleverReachIntegration\BusinessLogic\Services\DemoServiceInterface;
+use Logeecom\Infrastructure\Serializer\Concrete\JsonSerializer;
+use Logeecom\Infrastructure\Serializer\Serializer;
 use Logeecom\Infrastructure\TaskExecution\Process;
+use CleverReachIntegration\BusinessLogic\Services\AuthorizationService;
+use CleverReach\BusinessLogic\Authorization\Contracts\AuthorizationService as BaseAuthService;
 
 class BootstrapComponent extends BusinessLogicBootstrap
 {
+
+    /**
+     * Initializes services,repositories,proxies,events,pipelines and webhook handlers
+     */
+    public static function init()
+    {
+        parent::init();
+    }
+
     /**
      * Initializes services and utilities.
      */
@@ -46,6 +59,20 @@ class BootstrapComponent extends BusinessLogicBootstrap
             ShopLoggerAdapter::CLASS_NAME,
             function () {
                 return new LoggerService();
+            }
+        );
+
+        ServiceRegister::registerService(
+            Serializer::CLASS_NAME,
+            function () {
+                return new JsonSerializer();
+            }
+        );
+
+        ServiceRegister::registerService(
+            BaseAuthService::CLASS_NAME,
+            function () {
+                return new AuthorizationService();
             }
         );
     }

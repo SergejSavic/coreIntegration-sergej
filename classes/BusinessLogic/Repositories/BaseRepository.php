@@ -2,6 +2,7 @@
 
 namespace CleverReachIntegration\BusinessLogic\Repositories;
 
+use CleverReachIntegration\BusinessLogic\Services\TransformerService;
 use Logeecom\Infrastructure\ORM\Entity;
 use Logeecom\Infrastructure\ORM\Interfaces\RepositoryInterface;
 use Logeecom\Infrastructure\ORM\QueryFilter\QueryFilter;
@@ -101,8 +102,12 @@ class BaseRepository implements RepositoryInterface
     public function save(Entity $entity)
     {
         $properties = $this->getDataForInsertOrUpdate($entity);
-        $tableName = $this->getTableWithoutPrefix();
-        $result = \Db::getInstance(_PS_USE_SQL_SLAVE_)->insert($tableName, $properties);
+        $indexes = IndexHelper::mapFieldsToIndexes($entity);
+
+        $query = 'INSERT INTO ' . static::getTableName() . '(type,' . $this->getStringFromArray('index_', $indexes, false) .
+            ',data) VALUES(' . $this->getStringFromArray('', $properties, true) . ')';
+
+        $result = \Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
         $id = null;
 
         if ($result) {
@@ -168,6 +173,7 @@ class BaseRepository implements RepositoryInterface
             $query .= ' WHERE ';
 
             foreach ($conditions as $index => $condition) {
+                $value = $condition->getValue();
                 if ($index !== 0) {
                     $query .= $condition->getChainOperator() . ' ';
                 }
@@ -179,10 +185,21 @@ class BaseRepository implements RepositoryInterface
                     $query .= ' ' . $condition->getColumn() . ' ' . $condition->getOperator();
                 }
 
-                if ($condition->getValue() !== "") {
-                    $query .= "'" . $condition->getValue() . "'";
-                } else {
-                    $query .= "'" . "'";
+                if ($value !== null) {
+
+                    if ($condition->getValueType() === 'integer' && $condition->getColumn() !== 'id') {
+                        $value = TransformerService::transformNumberToString($value);
+                    }
+
+                    if ($value !== "") {
+                        if ($condition->getColumn() !== 'id') {
+                            $query .= "'" . $value . "'";
+                        } else {
+                            $query .= $value. ' ';
+                        }
+                    } else {
+                        $query .= "'" . "'";
+                    }
                 }
             }
         }
@@ -262,9 +279,9 @@ class BaseRepository implements RepositoryInterface
         $properties['type'] = $entityConfiguration->getType();
 
         foreach ($fields as $index => $field) {
+            $field = $field !== '' ? $field : null;
             $properties['index_' . $index] = $field;
         }
-
         $properties['data'] = addslashes(json_encode($entity->toArray()));
 
         return $properties;
@@ -333,12 +350,17 @@ class BaseRepository implements RepositoryInterface
         $string = '';
         $iterator = 1;
         foreach ($dataArray as $index => $data) {
-            if ($isString) {
+            if ($isString && $data !== null) {
                 $string .= "'";
             }
-            $string .= $stringHelper . $data;
 
-            if ($isString) {
+            if ($data !== null) {
+                $string .= $stringHelper . $data;
+            } else {
+                $string .= "NULL";
+            }
+
+            if ($isString && $data !== null) {
                 $string .= "'";
             }
 

@@ -43,10 +43,9 @@ class LoggerService implements ShopLoggerAdapter
                 return self::LOG_SEVERITY_LEVEL_ERROR;
             case 1:
                 return self::LOG_SEVERITY_LEVEL_WARNING;
+            case 3:
             case 2:
                 return self::LOG_SEVERITY_LEVEL_INFORMATIVE;
-            case 3:
-                return self::LOG_SEVERITY_LEVEL_MAJOR;
         }
     }
 

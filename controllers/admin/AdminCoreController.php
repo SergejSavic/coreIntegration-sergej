@@ -13,13 +13,11 @@ class AdminCoreController extends ModuleAdminController
 {
     /**
      * Initializes bootstrap and parent constructor
-     * @throws \Logeecom\Infrastructure\ORM\Exceptions\RepositoryClassException
      */
     public function __construct()
     {
         $this->bootstrap = true;
-        BootstrapComponent::initServices();
-        BootstrapComponent::initRepositories();
+        BootstrapComponent::init();
         parent::__construct();
     }
 
