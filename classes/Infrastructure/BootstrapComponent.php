@@ -21,6 +21,8 @@ use Logeecom\Infrastructure\Serializer\Serializer;
 use Logeecom\Infrastructure\TaskExecution\Process;
 use CleverReachIntegration\BusinessLogic\Services\Authorization\AuthorizationService;
 use CleverReach\BusinessLogic\Authorization\Contracts\AuthorizationService as BaseAuthService;
+use CleverReachIntegration\BusinessLogic\Services\Group\GroupService;
+use CleverReach\BusinessLogic\Group\Contracts\GroupService as GroupServiceInterface;
 
 class BootstrapComponent extends BusinessLogicBootstrap
 {
@@ -72,6 +74,13 @@ class BootstrapComponent extends BusinessLogicBootstrap
             BaseAuthService::CLASS_NAME,
             function () {
                 return new AuthorizationService();
+            }
+        );
+
+        ServiceRegister::registerService(
+            GroupServiceInterface::CLASS_NAME,
+            function () {
+                return new GroupService();
             }
         );
     }

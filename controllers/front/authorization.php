@@ -8,6 +8,7 @@ use Logeecom\Infrastructure\TaskExecution\Exceptions\QueueStorageUnavailableExce
 use CleverReach\BusinessLogic\Authorization\Contracts\AuthorizationService as BaseAuthService;
 use CleverReachIntegration\BusinessLogic\Services\Authorization\AuthorizationService;
 use Logeecom\Infrastructure\TaskExecution\QueueService as BaseQueueService;
+use CleverReach\BusinessLogic\Configuration\Configuration;
 
 /**
  * Class CoreAuthorizationModuleFrontController
@@ -29,7 +30,8 @@ class CoreAuthorizationModuleFrontController extends ModuleFrontController
      */
     public function initContent()
     {
-        BootstrapComponent::init();
+        /** @var Configuration $configService */
+        $configService = ServiceRegister::getService(Configuration::CLASS_NAME);
 
         $code = Tools::getValue('code');
 
@@ -40,7 +42,7 @@ class CoreAuthorizationModuleFrontController extends ModuleFrontController
             $queueService = ServiceRegister::getService(BaseQueueService::CLASS_NAME);
             try {
                 $authorizationService->authorize($code);
-                $queueService->enqueue('connectQueue', new ConnectTask());
+                $queueService->enqueue($configService->getDefaultQueueName(), new ConnectTask());
             } catch (QueryFilterInvalidParamException $e) {
             } catch (QueueStorageUnavailableException $e) {
             }

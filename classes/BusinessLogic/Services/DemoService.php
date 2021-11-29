@@ -2,6 +2,7 @@
 
 namespace CleverReachIntegration\BusinessLogic\Services;
 
+use CleverReach\BusinessLogic\Group\Contracts\GroupService;
 use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
 use Logeecom\Infrastructure\Configuration\ConfigEntity;
 use CleverReach\BusinessLogic\Configuration\Configuration;
@@ -35,11 +36,11 @@ class DemoService implements DemoServiceInterface
         /** @var QueueItemRepository $queueItemRepo */
         $queueItemRepo = RepositoryRegistry::getRepository(QueueItem::CLASS_NAME);
 //
-        $configEntity = new ConfigEntity();
-        $configEntity->setName('name2.1');
-        $configEntity->setValue('test2');
-        $configEntity->setContext('');
-        $configEntity->setId(20);
+//        $configEntity = new ConfigEntity();
+//        $configEntity->setName('name2.1');
+//        $configEntity->setValue('test2');
+//        $configEntity->setContext('');
+//        $configEntity->setId(20);
 //
 //        $queueItem = new QueueItem();
 //        $queueItem->setStatus('queued');
@@ -94,8 +95,10 @@ class DemoService implements DemoServiceInterface
         //$autoTest->execute();
 
         //$queueService->enqueue('newQueue', $autoTest,'',Priority::LOW);
-        $queueService->enqueue('queue', $autoTest);
+        //$queueService->enqueue('queue', $autoTest);
 
+        $groupService = ServiceRegister::getService(GroupService::CLASS_NAME);
+        $name = $groupService->getBlacklistedEmailsSuffix();
         return "This is new message";
     }
 }

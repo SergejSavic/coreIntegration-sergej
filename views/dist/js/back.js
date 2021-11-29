@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
     loginButton.addEventListener('click', function () {
         myWindow = window.open(cleverReachURL, 'popUpWindow', 'location=yes,height=570,width=900,scrollbars=yes,status=yes');
-        interval = setInterval(chechIfConnectTaskIsCompleted, 50);
+        interval = setInterval(chechIfConnectTaskIsCompleted, 10);
     });
 
     function chechIfConnectTaskIsCompleted() {

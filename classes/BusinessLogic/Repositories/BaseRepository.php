@@ -86,9 +86,11 @@ class BaseRepository implements RepositoryInterface
     {
         $query = 'SELECT ' . implode(',', $columns) . ' FROM ' . static::getTableName() . ' ';
 
-        $query .= $this->where($filter);
-        $query .= $this->orderBy($filter);
-        $query .= $this->limit($filter);
+        if ($filter !== null) {
+            $query .= $this->where($filter);
+            $query .= $this->orderBy($filter);
+            $query .= $this->limit($filter);
+        }
 
         return \Db::getInstance(_PS_USE_SQL_SLAVE_)->executeS($query);
     }
