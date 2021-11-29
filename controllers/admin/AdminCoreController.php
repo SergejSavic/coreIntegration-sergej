@@ -38,7 +38,15 @@ class AdminCoreController extends ModuleAdminController
     {
         $url = Tools::getHttpHost(true) . __PS_BASE_URI__ . self::BASE_IMG_URL;
 
-        $this->setTemplateFile('origin.tpl', array('headerImage' => $url . 'logo_cleverreach.svg', 'contentImage' => $url . 'icon_hello.png'));
+        try {
+            if ($this->queueItemRepository->isConnectTaskCompleted()) {
+                $this->setTemplateFile('syncPage.tpl', array('clientID' => '305190', 'headerImage' => $url . 'logo_cleverreach.svg'));
+            } else {
+                $this->setTemplateFile('origin.tpl', array('headerImage' => $url . 'logo_cleverreach.svg', 'contentImage' => $url . 'icon_hello.png'));
+            }
+        } catch (QueryFilterInvalidParamException $e) {
+        } catch (PrestaShopDatabaseException $e) {
+        }
     }
 
     /**
