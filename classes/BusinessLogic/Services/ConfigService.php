@@ -20,7 +20,7 @@ class ConfigService extends Configuration
      */
     public function getClientId()
     {
-        return 'rbUPpLYzJh';
+        return 'zhYTmczOCA';
     }
 
     /**
@@ -28,7 +28,7 @@ class ConfigService extends Configuration
      */
     public function getClientSecret()
     {
-        return 'mk2yKjaXbomIcYpf0xqlRrohADIWm2YS';
+        return 'p0ZlXjkyvdjd23f5I2qSiZahSwurl62K';
     }
 
     /**

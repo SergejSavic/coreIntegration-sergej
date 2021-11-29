@@ -5,7 +5,6 @@ namespace CleverReachIntegration\Infrastructure;
 use CleverReach\BusinessLogic\BootstrapComponent as BusinessLogicBootstrap;
 use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
 use CleverReach\BusinessLogic\Configuration\Configuration;
-use Logeecom\Infrastructure\Logger\LoggerConfiguration;
 use Logeecom\Infrastructure\Logger\Interfaces\ShopLoggerAdapter;
 use Logeecom\Infrastructure\TaskExecution\QueueItem;
 use CleverReachIntegration\BusinessLogic\Repositories\ConfigRepository;
@@ -13,14 +12,14 @@ use CleverReachIntegration\BusinessLogic\Repositories\ProcessRepository;
 use Logeecom\Infrastructure\Configuration\ConfigEntity;
 use Logeecom\Infrastructure\ORM\RepositoryRegistry;
 use Logeecom\Infrastructure\ServiceRegister;
-use CleverReachIntegration\BusinessLogic\Services\LoggerService;
+use CleverReachIntegration\BusinessLogic\Services\Logger\LoggerService;
 use CleverReachIntegration\BusinessLogic\Services\DemoService;
 use CleverReachIntegration\BusinessLogic\Services\ConfigService as ConfigurationService;
 use CleverReachIntegration\BusinessLogic\Services\DemoServiceInterface;
 use Logeecom\Infrastructure\Serializer\Concrete\JsonSerializer;
 use Logeecom\Infrastructure\Serializer\Serializer;
 use Logeecom\Infrastructure\TaskExecution\Process;
-use CleverReachIntegration\BusinessLogic\Services\AuthorizationService;
+use CleverReachIntegration\BusinessLogic\Services\Authorization\AuthorizationService;
 use CleverReach\BusinessLogic\Authorization\Contracts\AuthorizationService as BaseAuthService;
 
 class BootstrapComponent extends BusinessLogicBootstrap

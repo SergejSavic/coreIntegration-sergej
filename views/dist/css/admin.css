@@ -1,0 +1,87 @@
+
+div.container {
+    width: 50vw;
+    height: 64vh;
+    margin: 0 auto;
+    margin-top: 3vh;
+}
+
+img.header-image {
+    padding-left: 1vw;
+    width: 16vw;
+    height: 10vh;
+}
+
+div.content-container {
+    border: 2px solid black;
+    height: 36vh;
+    width: 22vw;
+    margin: 2vh auto;
+}
+
+div.connect-div {
+    width: 17vw;
+    margin-left: 2.5vw;
+}
+
+.iframe {
+    border: 2px solid black;
+    height: 60vh;
+    width: 63vw;
+    margin-left: 0vw;
+}
+
+img.content-image {
+    height: 10vh;
+    width: 18vw;
+    margin: 0 2vw;
+}
+
+h2.welcome-header {
+    font-size: 26px;
+    width: 18vw;
+    font-weight: 100;
+    margin-left: 2vw;
+}
+
+p.connect-paragraph {
+    font-size: 16px;
+    font-weight: 400;
+}
+
+button.submit-btn {
+    background: #ff781f;
+    cursor: pointer;
+    color: white;
+    font-size: 23px;
+    border: none;
+    border-radius: 10px;
+    width: 12vw;
+    margin-left: 4vw;
+    margin-top: 3vh;
+    height: 6vh;
+}
+
+span.first {
+    margin-left: 1.5vw;
+}
+
+span.second {
+    margin-left: 3vw;
+}
+
+.no-display {
+    display: none;
+}
+
+.border {
+    border: 2px solid black;
+}
+
+.no-border {
+    border: none;
+}
+
+#container-body {
+    background: white;
+}

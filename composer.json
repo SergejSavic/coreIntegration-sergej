@@ -18,6 +18,7 @@
     "cleverreach/integration-core": "3.3.4",
     "ext-json": "*",
     "ext-mysqli": "*",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "ext-http": "*"
   }
 }

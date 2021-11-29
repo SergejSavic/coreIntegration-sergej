@@ -11,6 +11,7 @@ class BasicTask extends Task
     public function execute()
     {
         Logger::logWarning('This is new message', 'Integration');
+        Logger::logInfo('This is new message', 'Integration');
         $this->reportProgress(100);
     }
 

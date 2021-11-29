@@ -1,6 +1,6 @@
 <?php
 
-namespace CleverReachIntegration\BusinessLogic\Services;
+namespace CleverReachIntegration\BusinessLogic\Services\Logger;
 
 use Logeecom\Infrastructure\Logger\Interfaces\ShopLoggerAdapter;
 use CleverReach\BusinessLogic\Configuration\Configuration;

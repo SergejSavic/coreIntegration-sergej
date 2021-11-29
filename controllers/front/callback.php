@@ -25,21 +25,13 @@ class CoreCallbackModuleFrontController extends ModuleFrontController
      */
     public function initContent()
     {
-        /** @var AsyncProcessStarterService $asyncProcessService */
-        $asyncProcessService = ServiceRegister::getService(AsyncProcessService::CLASS_NAME);
         $guid = Tools::getValue('guid');
 
-        if($guid) {
+        if ($guid) {
+            /** @var AsyncProcessStarterService $asyncProcessService */
+            $asyncProcessService = ServiceRegister::getService(AsyncProcessService::CLASS_NAME);
             $asyncProcessService->runProcess($guid);
         }
-        /*
-        $this->context->smarty->assign(
-            array(
-                'paymentId' => '1'
-            ));
-
-        $this->setTemplate('module:core/views/templates/front/file.tpl');
-        */
     }
 
 }

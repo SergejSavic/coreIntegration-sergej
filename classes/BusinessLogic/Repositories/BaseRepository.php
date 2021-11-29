@@ -195,7 +195,7 @@ class BaseRepository implements RepositoryInterface
                         if ($condition->getColumn() !== 'id') {
                             $query .= "'" . $value . "'";
                         } else {
-                            $query .= $value. ' ';
+                            $query .= $value . ' ';
                         }
                     } else {
                         $query .= "'" . "'";
@@ -279,7 +279,7 @@ class BaseRepository implements RepositoryInterface
         $properties['type'] = $entityConfiguration->getType();
 
         foreach ($fields as $index => $field) {
-            $field = $field !== '' ? $field : null;
+            //$field = $field !== '' ? $field : null;
             $properties['index_' . $index] = $field;
         }
         $properties['data'] = addslashes(json_encode($entity->toArray()));
@@ -350,17 +350,21 @@ class BaseRepository implements RepositoryInterface
         $string = '';
         $iterator = 1;
         foreach ($dataArray as $index => $data) {
-            if ($isString && $data !== null) {
+            if ($isString && $data !== null && $data !== '') {
                 $string .= "'";
             }
 
             if ($data !== null) {
-                $string .= $stringHelper . $data;
+                if ($data === '') {
+                    $string .= "''";
+                } else {
+                    $string .= $stringHelper . $data;
+                }
             } else {
                 $string .= "NULL";
             }
 
-            if ($isString && $data !== null) {
+            if ($isString && $data !== null && $data !== '') {
                 $string .= "'";
             }
 

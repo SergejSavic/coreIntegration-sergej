@@ -93,8 +93,8 @@ class DemoService implements DemoServiceInterface
         $basicTask = new BasicTask();
         //$autoTest->execute();
 
-        //$queueService->enqueue('newQueue', $basicTask,'',Priority::LOW);
-        $queueService->enqueue('queue2', $autoTest);
+        //$queueService->enqueue('newQueue', $autoTest,'',Priority::LOW);
+        $queueService->enqueue('queue', $autoTest);
 
         return "This is new message";
     }

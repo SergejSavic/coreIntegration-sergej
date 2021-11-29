@@ -139,6 +139,23 @@ class QueueItemRepository extends BaseRepository implements QueueItemRepositoryI
     }
 
     /**
+     * @return bool
+     * @throws \Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException
+     * @throws \PrestaShopDatabaseException
+     */
+    public function isConnectTaskCompleted()
+    {
+        $filter = new QueryFilter();
+        $filter->where('taskType', Operators::EQUALS, 'ConnectTask');
+        $filter->where('status', Operators::EQUALS, 'completed');
+        $filter->orderBy('id', QueryFilter::ORDER_DESC);
+
+        $queueItem = $this->selectOne($filter);
+
+        return $queueItem !== null;
+    }
+
+    /**
      * @param QueryFilter $filter
      * @param $runningQueueNames
      * @return array|bool|\mysqli_result|\PDOStatement|resource|null

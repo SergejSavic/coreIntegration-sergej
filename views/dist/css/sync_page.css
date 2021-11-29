@@ -1,0 +1,77 @@
+div.container-sync {
+    border: 2px solid black;
+    width: 50vw;
+    height: 64vh;
+    margin: 0 auto;
+    margin-top: 3vh;
+}
+
+img.header-image-sync {
+    padding-left: 1vw;
+    width: 20vw;
+    height: 10vh;
+}
+
+p.clientid-sync {
+    font-size: 23px;
+    font-weight: 700;
+    float: right;
+    margin: 2vh 3vh;
+    display: inline-block;
+}
+
+.disable {
+    pointer-events: none;
+}
+
+div.content-container-sync {
+    width: 30vw;
+    margin: 0 auto;
+    margin-top: 15vh;
+}
+
+span.sync-status {
+    font-size: 20px;
+}
+
+.done-sync {
+    font-size: 20px;
+    margin-left: 7vw;
+    color: green;
+}
+
+.iframe {
+    height: 60vh;
+    width: 63vw;
+    margin-left: 0vw;
+}
+
+.in-progress-sync {
+    font-size: 20px;
+    margin-left: 6vw;
+    color: coral;
+}
+
+.error-sync {
+    font-size: 20px;
+    margin-left: 7vw;
+    color: red;
+}
+
+
+button.submit-btn-sync {
+    background: #ff781f;
+    cursor: pointer;
+    color: white;
+    font-size: 23px;
+    border: none;
+    border-radius: 10px;
+    width: 12vw;
+    margin-left: 9vw;
+    margin-top: 14vh;
+    height: 6vh;
+}
+
+#container-body {
+    background: white;
+}

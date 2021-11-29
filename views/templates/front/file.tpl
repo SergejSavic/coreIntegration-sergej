@@ -1,1 +1,1 @@
-Hello from front controller!
+Hello from controller!

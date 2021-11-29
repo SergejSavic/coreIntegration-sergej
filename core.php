@@ -46,7 +46,7 @@ class Core extends Module
      */
     public function install()
     {
-        return parent::install() && $this->createDatabaseTables();
+        return parent::install() && $this->createDatabaseTables() && $this->registerHooksMethod();
     }
 
     /**
@@ -120,6 +120,43 @@ class Core extends Module
             && Db::getInstance()->execute('DROP TABLE IF EXISTS`' . _DB_PREFIX_ . 'config_entities`')
             && Db::getInstance()->execute('DROP TABLE IF EXISTS`' . _DB_PREFIX_ . 'process_entities`')
             && Db::getInstance()->execute('DROP TABLE IF EXISTS`' . _DB_PREFIX_ . 'queue_item_entities`');
+    }
+
+    /**
+     * Calls method to set css and js to controller
+     */
+    public function hookDisplayBackOfficeHeader()
+    {
+        if (false !== strpos(Tools::getValue('controller'), 'AdminCore')) {
+            $this->initControllerAssets();
+        }
+    }
+
+    /**
+     * Sets css and js files for admin controllers
+     */
+    private function initControllerAssets()
+    {
+        if (Tools::getValue('controller') === 'AdminCore') {
+            $adminAjaxLink = $this->context->link->getAdminLink('AdminCore');
+            $cleverReachURL = 'http://rest.cleverreach.com/oauth/authorize.php?client_id=zhYTmczOCA&grant=basic&response_type=code&redirect_uri=' .
+                Tools::getHttpHost(true) . __PS_BASE_URI__ . 'en/module/core/authorization' . '?XDEBUG_SESSION_START=debug';
+            Media::addJsDef(array(
+                'adminAjaxLink' => $adminAjaxLink,
+                'cleverReachURL' => $cleverReachURL
+            ));
+            $this->context->controller->addCSS($this->_path . 'views/dist/css/admin.css');
+            $this->context->controller->addCSS($this->_path . 'views/dist/css/sync_page.css');
+            $this->context->controller->addJS($this->_path . 'views/dist/js/back.js');
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    private function registerHooksMethod()
+    {
+        return $this->registerHook('displayBackOfficeHeader');
     }
 }
 

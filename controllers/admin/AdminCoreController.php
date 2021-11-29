@@ -1,10 +1,10 @@
 <?php
 
-use Logeecom\Infrastructure\Http\HttpClient;
-use Logeecom\Infrastructure\ServiceRegister;
-use CleverReachIntegration\BusinessLogic\Services\DemoServiceInterface;
-use Logeecom\Infrastructure\Http;
+use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
+use Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException;
+use Logeecom\Infrastructure\ORM\RepositoryRegistry;
 use CleverReachIntegration\Infrastructure\BootstrapComponent;
+use Logeecom\Infrastructure\TaskExecution\QueueItem;
 
 /**
  * Class AdminCoreController
@@ -12,12 +12,21 @@ use CleverReachIntegration\Infrastructure\BootstrapComponent;
 class AdminCoreController extends ModuleAdminController
 {
     /**
-     * Initializes bootstrap and parent constructor
+     * @var string
+     */
+    const BASE_IMG_URL = 'modules/cleverreach/views/img/';
+    /** @var QueueItemRepository $queueItemRepository */
+    private $queueItemRepository;
+
+    /**
+     * Initializes bootstrap and queue item repository
+     * @throws PrestaShopException
      */
     public function __construct()
     {
         $this->bootstrap = true;
         BootstrapComponent::init();
+        $this->queueItemRepository = RepositoryRegistry::getRepository(QueueItem::CLASS_NAME);
         parent::__construct();
     }
 
@@ -27,17 +36,27 @@ class AdminCoreController extends ModuleAdminController
      */
     public function initContent()
     {
-        $demoService = ServiceRegister::getService(DemoServiceInterface::CLASS_NAME);
-        $msg = $demoService->getMessage();
-        $configRepo = \Logeecom\Infrastructure\ORM\RepositoryRegistry::getRepository(\Logeecom\Infrastructure\Configuration\ConfigEntity::CLASS_NAME);
-        $className = $configRepo::getClassName();
-        $table = $className::getTableName();
-        $this->setTemplateFile('origin.tpl', array());
+        $url = Tools::getHttpHost(true) . __PS_BASE_URI__ . self::BASE_IMG_URL;
+
+        $this->setTemplateFile('origin.tpl', array('headerImage' => $url . 'logo_cleverreach.svg', 'contentImage' => $url . 'icon_hello.png'));
+    }
+
+    /**
+     * @throws \Logeecom\Infrastructure\ORM\Exceptions\RepositoryNotRegisteredException
+     * @throws QueryFilterInvalidParamException
+     * @throws PrestaShopDatabaseException
+     */
+    public function ajaxProcessCheckIfConnectTaskIsCompleted()
+    {
+        $response = $this->queueItemRepository->isConnectTaskCompleted();
+        echo json_encode($response);
+        exit;
     }
 
     /**
      * @param $templateName
      * @param $variables
+     * @throws SmartyException
      */
     private function setTemplateFile($templateName, $variables)
     {
