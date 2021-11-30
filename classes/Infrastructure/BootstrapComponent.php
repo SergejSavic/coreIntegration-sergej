@@ -3,13 +3,19 @@
 namespace CleverReachIntegration\Infrastructure;
 
 use CleverReach\BusinessLogic\BootstrapComponent as BusinessLogicBootstrap;
+use CleverReach\BusinessLogic\DynamicContent\Contracts\DynamicContentService;
+use CleverReach\BusinessLogic\Field\Contracts\FieldService as FieldServiceInterface;
+use CleverReach\BusinessLogic\Form\FormEventsService;
 use CleverReach\BusinessLogic\Language\Contracts\TranslationService as TranslationServiceInterface;
 use CleverReach\BusinessLogic\Mailing\Contracts\DefaultMailingService;
+use CleverReach\BusinessLogic\Receiver\ReceiverEventsService;
+use CleverReach\BusinessLogic\Segment\Contracts\SegmentService as SegmentServiceInterface;
 use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
 use CleverReach\BusinessLogic\Configuration\Configuration;
 use CleverReachIntegration\BusinessLogic\Services\Mailing\MailingService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\CustomerService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\GuestService;
+use CleverReachIntegration\BusinessLogic\Services\Segment\SegmentService;
 use Logeecom\Infrastructure\Logger\Interfaces\ShopLoggerAdapter;
 use Logeecom\Infrastructure\ORM\Exceptions\RepositoryClassException;
 use Logeecom\Infrastructure\TaskExecution\QueueItem;
@@ -34,6 +40,10 @@ use CleverReach\BusinessLogic\Form\Contracts\FormService as FormServiceInterface
 use CleverReachIntegration\BusinessLogic\Services\Receiver\VisitorService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\SubscriberService;
 use CleverReachIntegration\BusinessLogic\Services\Translation\TranslationService;
+use CleverReachIntegration\BusinessLogic\Services\DynamicContent\DynamicContentService as DynamicContent;
+use CleverReachIntegration\BusinessLogic\Services\Field\FieldService;
+use CleverReachIntegration\BusinessLogic\Services\ReceiverEvents\ReceiverEventsService as ReceiverEvents;
+use CleverReachIntegration\BusinessLogic\Services\FormEvents\FormEventsService as FormEvents;
 
 /**
  * Class BootstrapComponent
@@ -144,6 +154,41 @@ class BootstrapComponent extends BusinessLogicBootstrap
             TranslationServiceInterface::CLASS_NAME,
             function () {
                 return new TranslationService();
+            }
+        );
+
+        ServiceRegister::registerService(
+            DynamicContentService::CLASS_NAME,
+            function () {
+                return new DynamicContent();
+            }
+        );
+
+        ServiceRegister::registerService(
+            FieldServiceInterface::CLASS_NAME,
+            function () {
+                return new FieldService();
+            }
+        );
+
+        ServiceRegister::registerService(
+            SegmentServiceInterface::CLASS_NAME,
+            function () {
+                return new SegmentService();
+            }
+        );
+
+        ServiceRegister::registerService(
+            ReceiverEventsService::CLASS_NAME,
+            function () {
+                return new ReceiverEvents();
+            }
+        );
+
+        ServiceRegister::registerService(
+            FormEventsService::CLASS_NAME,
+            function () {
+                return new FormEvents();
             }
         );
     }
