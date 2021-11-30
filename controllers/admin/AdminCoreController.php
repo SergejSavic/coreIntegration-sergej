@@ -1,11 +1,13 @@
 <?php
 
 use CleverReach\BusinessLogic\Receiver\DTO\Config\SyncService;
+use CleverReachIntegration\BusinessLogic\Repositories\ConfigRepository;
 use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\CustomerService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\GuestService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\SubscriberService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\VisitorService;
+use Logeecom\Infrastructure\Configuration\ConfigEntity;
 use Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException;
 use Logeecom\Infrastructure\ORM\Exceptions\RepositoryNotRegisteredException;
 use Logeecom\Infrastructure\ORM\RepositoryRegistry;
@@ -23,6 +25,8 @@ class AdminCoreController extends ModuleAdminController
     const BASE_IMG_URL = 'modules/cleverreach/views/img/';
     /** @var QueueItemRepository $queueItemRepository */
     private $queueItemRepository;
+    /** @var ConfigRepository $configRepository */
+    private $configRepository;
 
     /**
      * Initializes bootstrap and queue item repository
@@ -34,6 +38,7 @@ class AdminCoreController extends ModuleAdminController
         $this->bootstrap = true;
         BootstrapComponent::init();
         $this->queueItemRepository = RepositoryRegistry::getRepository(QueueItem::CLASS_NAME);
+        $this->configRepository = RepositoryRegistry::getRepository(ConfigEntity::CLASS_NAME);
         parent::__construct();
     }
 

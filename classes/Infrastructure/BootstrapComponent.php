@@ -3,8 +3,11 @@
 namespace CleverReachIntegration\Infrastructure;
 
 use CleverReach\BusinessLogic\BootstrapComponent as BusinessLogicBootstrap;
+use CleverReach\BusinessLogic\Language\Contracts\TranslationService as TranslationServiceInterface;
+use CleverReach\BusinessLogic\Mailing\Contracts\DefaultMailingService;
 use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
 use CleverReach\BusinessLogic\Configuration\Configuration;
+use CleverReachIntegration\BusinessLogic\Services\Mailing\MailingService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\CustomerService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\GuestService;
 use Logeecom\Infrastructure\Logger\Interfaces\ShopLoggerAdapter;
@@ -30,6 +33,7 @@ use CleverReachIntegration\BusinessLogic\Services\Form\FormService;
 use CleverReach\BusinessLogic\Form\Contracts\FormService as FormServiceInterface;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\VisitorService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\SubscriberService;
+use CleverReachIntegration\BusinessLogic\Services\Translation\TranslationService;
 
 /**
  * Class BootstrapComponent
@@ -126,6 +130,20 @@ class BootstrapComponent extends BusinessLogicBootstrap
             SubscriberService::THIS_CLASS_NAME,
             function () {
                 return SubscriberService::getInstance();
+            }
+        );
+
+        ServiceRegister::registerService(
+            DefaultMailingService::CLASS_NAME,
+            function () {
+                return new MailingService();
+            }
+        );
+
+        ServiceRegister::registerService(
+            TranslationServiceInterface::CLASS_NAME,
+            function () {
+                return new TranslationService();
             }
         );
     }

@@ -281,7 +281,6 @@ class BaseRepository implements RepositoryInterface
         $properties['type'] = $entityConfiguration->getType();
 
         foreach ($fields as $index => $field) {
-            //$field = $field !== '' ? $field : null;
             $properties['index_' . $index] = $field;
         }
         $properties['data'] = addslashes(json_encode($entity->toArray()));

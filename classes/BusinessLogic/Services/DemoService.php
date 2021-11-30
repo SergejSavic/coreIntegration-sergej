@@ -3,6 +3,7 @@
 namespace CleverReachIntegration\BusinessLogic\Services;
 
 use CleverReach\BusinessLogic\Group\Contracts\GroupService;
+use CleverReach\BusinessLogic\Language\Contracts\TranslationService;
 use CleverReach\BusinessLogic\Receiver\Contracts\ReceiverService;
 use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\CustomerService;
@@ -111,6 +112,9 @@ class DemoService implements DemoServiceInterface
 //        $subscriberService = ServiceRegister::getService(SubscriberService::THIS_CLASS_NAME);
 //        $subscriberService->getReceiverBatch(array('pub@prestashop.com', 'milica@mail.com', 'ivanmarko@mail.com', 'nikola@mail.com', 'lakik@mail.com'));
 //        $subscriberService->getReceiverEmails();
+
+        $translationService = ServiceRegister::getService(TranslationService::CLASS_NAME);
+        $translationService->getSystemLanguage();
         return "This is new message";
     }
 }
