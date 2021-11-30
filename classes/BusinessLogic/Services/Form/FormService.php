@@ -7,13 +7,16 @@ use CleverReachIntegration\BusinessLogic\Services\ConfigService as Configuration
 use Logeecom\Infrastructure\ServiceRegister;
 use CleverReach\BusinessLogic\Form\FormService as BaseService;
 
+/**
+ * Class FormService
+ * @package CleverReachIntegration\BusinessLogic\Services\Form
+ */
 class FormService extends BaseService
 {
     /** @var ConfigurationService $configService */
     private $configService;
 
     /**
-     * @param ConfigurationService $configService
      * initializes configuration service
      */
     public function __construct()

@@ -2,6 +2,10 @@
 
 namespace CleverReachIntegration\BusinessLogic\Services;
 
+/**
+ * Class TransformerService
+ * @package CleverReachIntegration\BusinessLogic\Services
+ */
 class TransformerService
 {
     /**

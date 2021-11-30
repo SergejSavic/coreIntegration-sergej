@@ -8,6 +8,10 @@ use Logeecom\Infrastructure\ServiceRegister;
 use Logeecom\Infrastructure\Logger\LogData;
 use PrestaShopLoggerCore as Logger;
 
+/**
+ * Class LoggerService
+ * @package CleverReachIntegration\BusinessLogic\Services\Logger
+ */
 class LoggerService implements ShopLoggerAdapter
 {
     const LOG_SEVERITY_LEVEL_INFORMATIVE = 1;
@@ -43,9 +47,10 @@ class LoggerService implements ShopLoggerAdapter
                 return self::LOG_SEVERITY_LEVEL_ERROR;
             case 1:
                 return self::LOG_SEVERITY_LEVEL_WARNING;
-            case 3:
             case 2:
                 return self::LOG_SEVERITY_LEVEL_INFORMATIVE;
+            case 3:
+                return self::LOG_SEVERITY_LEVEL_MAJOR;
         }
     }
 

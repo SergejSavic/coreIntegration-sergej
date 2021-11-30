@@ -8,6 +8,10 @@ use CleverReachIntegration\BusinessLogic\Repositories\PrestaShopRepository;
 use CleverReachIntegration\BusinessLogic\Services\ConfigService as ConfigurationService;
 use Logeecom\Infrastructure\ServiceRegister;
 
+/**
+ * Class GroupService
+ * @package CleverReachIntegration\BusinessLogic\Services\Group
+ */
 class GroupService extends BaseService
 {
     /** @var ConfigurationService $configService */

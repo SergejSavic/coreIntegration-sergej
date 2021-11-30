@@ -5,7 +5,10 @@ namespace CleverReachIntegration\Infrastructure;
 use CleverReach\BusinessLogic\BootstrapComponent as BusinessLogicBootstrap;
 use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
 use CleverReach\BusinessLogic\Configuration\Configuration;
+use CleverReachIntegration\BusinessLogic\Services\Receiver\CustomerService;
+use CleverReachIntegration\BusinessLogic\Services\Receiver\GuestService;
 use Logeecom\Infrastructure\Logger\Interfaces\ShopLoggerAdapter;
+use Logeecom\Infrastructure\ORM\Exceptions\RepositoryClassException;
 use Logeecom\Infrastructure\TaskExecution\QueueItem;
 use CleverReachIntegration\BusinessLogic\Repositories\ConfigRepository;
 use CleverReachIntegration\BusinessLogic\Repositories\ProcessRepository;
@@ -23,10 +26,17 @@ use CleverReachIntegration\BusinessLogic\Services\Authorization\AuthorizationSer
 use CleverReach\BusinessLogic\Authorization\Contracts\AuthorizationService as BaseAuthService;
 use CleverReachIntegration\BusinessLogic\Services\Group\GroupService;
 use CleverReach\BusinessLogic\Group\Contracts\GroupService as GroupServiceInterface;
+use CleverReachIntegration\BusinessLogic\Services\Form\FormService;
+use CleverReach\BusinessLogic\Form\Contracts\FormService as FormServiceInterface;
+use CleverReachIntegration\BusinessLogic\Services\Receiver\VisitorService;
+use CleverReachIntegration\BusinessLogic\Services\Receiver\SubscriberService;
 
+/**
+ * Class BootstrapComponent
+ * @package CleverReachIntegration\Infrastructure
+ */
 class BootstrapComponent extends BusinessLogicBootstrap
 {
-
     /**
      * Initializes services,repositories,proxies,events,pipelines and webhook handlers
      */
@@ -83,10 +93,45 @@ class BootstrapComponent extends BusinessLogicBootstrap
                 return new GroupService();
             }
         );
+
+        ServiceRegister::registerService(
+            FormServiceInterface::CLASS_NAME,
+            function () {
+                return new FormService();
+            }
+        );
+
+        ServiceRegister::registerService(
+            VisitorService::THIS_CLASS_NAME,
+            function () {
+                return VisitorService::getInstance();
+            }
+        );
+
+        ServiceRegister::registerService(
+            GuestService::THIS_CLASS_NAME,
+            function () {
+                return GuestService::getInstance();
+            }
+        );
+
+        ServiceRegister::registerService(
+            CustomerService::THIS_CLASS_NAME,
+            function () {
+                return CustomerService::getInstance();
+            }
+        );
+
+        ServiceRegister::registerService(
+            SubscriberService::THIS_CLASS_NAME,
+            function () {
+                return SubscriberService::getInstance();
+            }
+        );
     }
 
     /**
-     * @throws \Logeecom\Infrastructure\ORM\Exceptions\RepositoryClassException
+     * @throws RepositoryClassException
      * Initializes repositories
      */
     public static function initRepositories()
@@ -97,6 +142,5 @@ class BootstrapComponent extends BusinessLogicBootstrap
         RepositoryRegistry::registerRepository(Process::CLASS_NAME, ProcessRepository::getClassName());
         RepositoryRegistry::registerRepository(QueueItem::CLASS_NAME, QueueItemRepository::getClassName());
     }
-
 
 }

@@ -5,6 +5,10 @@ namespace CleverReachIntegration\BusinessLogic\Services;
 use CleverReach\BusinessLogic\Configuration\Configuration;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 
+/**
+ * Class ConfigService
+ * @package CleverReachIntegration\BusinessLogic\Services
+ */
 class ConfigService extends Configuration
 {
     /**

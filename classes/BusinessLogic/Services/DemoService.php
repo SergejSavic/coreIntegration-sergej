@@ -3,7 +3,12 @@
 namespace CleverReachIntegration\BusinessLogic\Services;
 
 use CleverReach\BusinessLogic\Group\Contracts\GroupService;
+use CleverReach\BusinessLogic\Receiver\Contracts\ReceiverService;
 use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
+use CleverReachIntegration\BusinessLogic\Services\Receiver\CustomerService;
+use CleverReachIntegration\BusinessLogic\Services\Receiver\GuestService;
+use CleverReachIntegration\BusinessLogic\Services\Receiver\SubscriberService;
+use CleverReachIntegration\BusinessLogic\Services\Receiver\VisitorService;
 use Logeecom\Infrastructure\Configuration\ConfigEntity;
 use CleverReach\BusinessLogic\Configuration\Configuration;
 use Logeecom\Infrastructure\Logger\Logger;
@@ -54,7 +59,7 @@ class DemoService implements DemoServiceInterface
 //        $queueItem->setRetries(0);
 //        $queueItem->setFailureDescription("");
 //
-       //$repository->save($configEntity);
+        //$repository->save($configEntity);
 //
 //        //$queueItemRepo->saveWithCondition($queueItem, array('index_4' => 'context'));
 //
@@ -97,8 +102,15 @@ class DemoService implements DemoServiceInterface
         //$queueService->enqueue('newQueue', $autoTest,'',Priority::LOW);
         //$queueService->enqueue('queue', $autoTest);
 
-        $groupService = ServiceRegister::getService(GroupService::CLASS_NAME);
-        $name = $groupService->getBlacklistedEmailsSuffix();
+//        $groupService = ServiceRegister::getService(GroupService::CLASS_NAME);
+//        $name = $groupService->getBlacklistedEmailsSuffix();
+
+        $visitorService = ServiceRegister::getService(VisitorService::THIS_CLASS_NAME);
+        $visitors = $visitorService->getReceiverBatch(array('lakik@mail.com', 'haydu@mail.com'), false);
+        $emails = $visitorService->getReceiverEmails();
+//        $subscriberService = ServiceRegister::getService(SubscriberService::THIS_CLASS_NAME);
+//        $subscriberService->getReceiverBatch(array('pub@prestashop.com', 'milica@mail.com', 'ivanmarko@mail.com', 'nikola@mail.com', 'lakik@mail.com'));
+//        $subscriberService->getReceiverEmails();
         return "This is new message";
     }
 }

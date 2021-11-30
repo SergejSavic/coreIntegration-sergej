@@ -3,15 +3,15 @@
 namespace CleverReachIntegration\BusinessLogic\Services\Authorization;
 
 use CleverReach\BusinessLogic\Authorization\AuthorizationService as BaseService;
-use CleverReach\BusinessLogic\Authorization\Exceptions\FailedToRefreshAccessToken;
-use CleverReach\BusinessLogic\Authorization\Exceptions\FailedToRetrieveAuthInfoException;
 use CleverReach\BusinessLogic\Authorization\Http\AuthProxy;
 use Logeecom\Infrastructure\ServiceRegister;
-use Logeecom\Infrastructure\Http\Exceptions\HttpCommunicationException;
-use Logeecom\Infrastructure\Http\Exceptions\HttpRequestException;
 use Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException;
 use PrestaShop\PrestaShop\Adapter\Entity\Tools;
 
+/**
+ * Class AuthorizationService
+ * @package CleverReachIntegration\BusinessLogic\Services\Authorization
+ */
 class AuthorizationService extends BaseService
 {
     /**
