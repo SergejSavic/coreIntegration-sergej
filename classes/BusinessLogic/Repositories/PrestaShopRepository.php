@@ -6,6 +6,10 @@ use PrestaShop\PrestaShop\Adapter\Entity\Context;
 use PrestaShop\PrestaShop\Adapter\Entity\OrderState;
 use PrestaShop\PrestaShop\Adapter\Entity\Shop;
 
+/**
+ * Class PrestaShopRepository
+ * @package CleverReachIntegration\BusinessLogic\Repositories
+ */
 class PrestaShopRepository
 {
     /**
@@ -20,6 +24,7 @@ class PrestaShopRepository
     }
 
     /**
+     * @param $emails
      * @param $groupId
      * @return array|bool|\mysqli_result|\PDOStatement|resource|null
      * @throws \PrestaShopDatabaseException
@@ -90,7 +95,6 @@ class PrestaShopRepository
     }
 
     /**
-     * @param $groupId
      * @param $email
      * @return array|bool|\mysqli_result|\PDOStatement|resource|null
      * @throws \PrestaShopDatabaseException

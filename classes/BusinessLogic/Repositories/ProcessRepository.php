@@ -2,6 +2,10 @@
 
 namespace CleverReachIntegration\BusinessLogic\Repositories;
 
+/**
+ * Class ProcessRepository
+ * @package CleverReachIntegration\BusinessLogic\Repositories
+ */
 class ProcessRepository extends BaseRepository
 {
     /**

@@ -3,12 +3,18 @@
 namespace CleverReachIntegration\BusinessLogic\Repositories;
 
 use CleverReachIntegration\BusinessLogic\Services\TransformerService;
+use Logeecom\Infrastructure\ORM\Entity;
+use Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException;
 use Logeecom\Infrastructure\ORM\QueryFilter\Operators;
 use Logeecom\Infrastructure\ORM\QueryFilter\QueryFilter;
 use Logeecom\Infrastructure\TaskExecution\Exceptions\QueueItemSaveException;
 use Logeecom\Infrastructure\TaskExecution\QueueItem;
 use Logeecom\Infrastructure\ORM\Interfaces\QueueItemRepository as QueueItemRepositoryInterface;
 
+/**
+ * Class QueueItemRepository
+ * @package CleverReachIntegration\BusinessLogic\Repositories
+ */
 class QueueItemRepository extends BaseRepository implements QueueItemRepositoryInterface
 {
     /**
@@ -76,7 +82,7 @@ class QueueItemRepository extends BaseRepository implements QueueItemRepositoryI
 
     /**
      * @return array
-     * @throws \Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException
+     * @throws QueryFilterInvalidParamException
      * @throws \PrestaShopDatabaseException
      */
     public function getRunningQueueNames()
@@ -97,8 +103,8 @@ class QueueItemRepository extends BaseRepository implements QueueItemRepositoryI
      * @param $priority
      * @param $runningQueueNames
      * @param $limit
-     * @return array|\Logeecom\Infrastructure\ORM\Entity[]
-     * @throws \Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException
+     * @return array|Entity[]
+     * @throws QueryFilterInvalidParamException
      * @throws \PrestaShopDatabaseException
      */
     public function getQueuedItems($priority, $runningQueueNames, $limit)
@@ -124,7 +130,7 @@ class QueueItemRepository extends BaseRepository implements QueueItemRepositoryI
      * @param $runningQueueNames
      * @param $limit
      * @return array
-     * @throws \Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException
+     * @throws QueryFilterInvalidParamException
      * @throws \PrestaShopDatabaseException
      */
     public function getQueueIdsForExecution($priority, $runningQueueNames, $limit)
@@ -140,7 +146,7 @@ class QueueItemRepository extends BaseRepository implements QueueItemRepositoryI
 
     /**
      * @return bool
-     * @throws \Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException
+     * @throws QueryFilterInvalidParamException
      * @throws \PrestaShopDatabaseException
      */
     public function isConnectTaskCompleted()
@@ -153,6 +159,39 @@ class QueueItemRepository extends BaseRepository implements QueueItemRepositoryI
         $queueItem = $this->selectOne($filter);
 
         return $queueItem !== null;
+    }
+
+    /**
+     * @return bool
+     * @throws QueryFilterInvalidParamException
+     * @throws \PrestaShopDatabaseException
+     */
+    public function isInitialSyncIsCompleted()
+    {
+        $filter = new QueryFilter();
+        $filter->where('taskType', Operators::EQUALS, 'InitialSyncTask');
+        $filter->where('status', Operators::EQUALS, 'completed');
+        $filter->orderBy('id', QueryFilter::ORDER_DESC);
+
+        $queueItem = $this->selectOne($filter);
+
+        return $queueItem !== null;
+    }
+
+    /**
+     * @return mixed|string
+     * @throws QueryFilterInvalidParamException
+     * @throws \PrestaShopDatabaseException
+     */
+    public function checkInitialSyncStatus()
+    {
+        $filter = new QueryFilter();
+        $filter->where('taskType', Operators::EQUALS, 'InitialSyncTask');
+        $filter->orderBy('id', QueryFilter::ORDER_DESC);
+
+        $queueItem = $this->selectOne($filter);
+
+        return $queueItem !== null ? $queueItem->getStatus() : '';
     }
 
     /**
@@ -179,7 +218,7 @@ class QueueItemRepository extends BaseRepository implements QueueItemRepositoryI
 
     /**
      * @throws \PrestaShopDatabaseException
-     * @throws \Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException
+     * @throws QueryFilterInvalidParamException
      * @throws QueueItemSaveException
      */
     private function updateQueueItem($queueItem, array $additionalWhere)

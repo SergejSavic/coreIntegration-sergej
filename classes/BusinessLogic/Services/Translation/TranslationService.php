@@ -5,7 +5,10 @@ namespace CleverReachIntegration\BusinessLogic\Services\Translation;
 use CleverReach\BusinessLogic\Language\Contracts\TranslationService as TranslationInterface;
 use PrestaShop\PrestaShop\Adapter\Entity\Language;
 
-
+/**
+ * Class TranslationService
+ * @package CleverReachIntegration\BusinessLogic\Services\Translation
+ */
 class TranslationService implements TranslationInterface
 {
     /**

@@ -3,7 +3,6 @@
 namespace CleverReachIntegration\BusinessLogic\Services\Receiver;
 
 use CleverReach\BusinessLogic\Receiver\DTO\Receiver;
-use CleverReach\BusinessLogic\Receiver\ReceiverService;
 
 /**
  * Class GuestService

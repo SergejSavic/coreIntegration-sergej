@@ -5,6 +5,10 @@ namespace CleverReachIntegration\BusinessLogic\Services\Mailing;
 use CleverReach\BusinessLogic\Mailing\Contracts\DefaultMailingService;
 use CleverReach\BusinessLogic\Mailing\DTO\MailingContent;
 
+/**
+ * Class MailingService
+ * @package CleverReachIntegration\BusinessLogic\Services\Mailing
+ */
 class MailingService implements DefaultMailingService
 {
     /**

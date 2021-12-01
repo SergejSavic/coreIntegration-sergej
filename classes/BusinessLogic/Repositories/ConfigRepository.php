@@ -2,9 +2,10 @@
 
 namespace CleverReachIntegration\BusinessLogic\Repositories;
 
-use Logeecom\Infrastructure\ORM\QueryFilter\Operators;
-use Logeecom\Infrastructure\ORM\QueryFilter\QueryFilter;
-
+/**
+ * Class ConfigRepository
+ * @package CleverReachIntegration\BusinessLogic\Repositories
+ */
 class ConfigRepository extends BaseRepository
 {
     /**
@@ -20,15 +21,4 @@ class ConfigRepository extends BaseRepository
         return _DB_PREFIX_ . 'config_entities';
     }
 
-    /**
-     * @throws \Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException
-     * @throws \PrestaShopDatabaseException
-     */
-    public function enabledSyncServicesExist()
-    {
-        $filter = new QueryFilter();
-        $filter->where('name', Operators::EQUALS, 'enabledSyncServices');
-
-        $record = $this->selectOne($filter);
-    }
 }

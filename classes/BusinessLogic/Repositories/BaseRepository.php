@@ -4,10 +4,15 @@ namespace CleverReachIntegration\BusinessLogic\Repositories;
 
 use CleverReachIntegration\BusinessLogic\Services\TransformerService;
 use Logeecom\Infrastructure\ORM\Entity;
+use Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException;
 use Logeecom\Infrastructure\ORM\Interfaces\RepositoryInterface;
 use Logeecom\Infrastructure\ORM\QueryFilter\QueryFilter;
 use Logeecom\Infrastructure\ORM\Utility\IndexHelper;
 
+/**
+ * Class BaseRepository
+ * @package CleverReachIntegration\BusinessLogic\Repositories
+ */
 class BaseRepository implements RepositoryInterface
 {
     /**
@@ -24,7 +29,7 @@ class BaseRepository implements RepositoryInterface
      */
     protected static function getTableName()
     {
-        return _DB_PREFIX_ . '_cleverreach_entity';
+        return _DB_PREFIX_ . 'cleverreach_entities';
     }
 
     /**
@@ -99,7 +104,7 @@ class BaseRepository implements RepositoryInterface
      * @param Entity $entity
      * @return int|null
      * @throws \PrestaShopDatabaseException
-     * @throws \Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException
+     * @throws QueryFilterInvalidParamException
      */
     public function save(Entity $entity)
     {
@@ -148,7 +153,7 @@ class BaseRepository implements RepositoryInterface
 
     /**
      * @param QueryFilter|null $filter
-     * @return false|int|string
+     * @return int
      */
     public function count(QueryFilter $filter = null)
     {
@@ -342,8 +347,9 @@ class BaseRepository implements RepositoryInterface
 
 
     /**
-     * @param string $optionalString
+     * @param $stringHelper
      * @param $dataArray
+     * @param $isString
      * @return string
      */
     protected function getStringFromArray($stringHelper, $dataArray, $isString)

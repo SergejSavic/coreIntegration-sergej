@@ -44,6 +44,8 @@ use CleverReachIntegration\BusinessLogic\Services\DynamicContent\DynamicContentS
 use CleverReachIntegration\BusinessLogic\Services\Field\FieldService;
 use CleverReachIntegration\BusinessLogic\Services\ReceiverEvents\ReceiverEventsService as ReceiverEvents;
 use CleverReachIntegration\BusinessLogic\Services\FormEvents\FormEventsService as FormEvents;
+use CleverReachIntegration\BusinessLogic\Repositories\BaseRepository;
+use CleverReach\BusinessLogic\Form\Entities\Form;
 
 /**
  * Class BootstrapComponent
@@ -204,6 +206,7 @@ class BootstrapComponent extends BusinessLogicBootstrap
         RepositoryRegistry::registerRepository(ConfigEntity::CLASS_NAME, ConfigRepository::getClassName());
         RepositoryRegistry::registerRepository(Process::CLASS_NAME, ProcessRepository::getClassName());
         RepositoryRegistry::registerRepository(QueueItem::CLASS_NAME, QueueItemRepository::getClassName());
+        RepositoryRegistry::registerRepository(Form::CLASS_NAME, BaseRepository::getClassName());
     }
 
 }

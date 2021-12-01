@@ -4,6 +4,10 @@ namespace CleverReachIntegration\BusinessLogic\Services\FormEvents;
 
 use CleverReach\BusinessLogic\Form\FormEventsService as BaseFormEventsService;
 
+/**
+ * Class FormEventsService
+ * @package CleverReachIntegration\BusinessLogic\Services\FormEvents
+ */
 class FormEventsService extends BaseFormEventsService
 {
     /**
