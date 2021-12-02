@@ -183,6 +183,19 @@ class PrestaShopRepository
      * @param $id
      * @return false|string
      */
+    public function getCurrencyById($id)
+    {
+        $tableName = 'currency';
+        $query = 'SELECT `iso_code` FROM `' . _DB_PREFIX_ . pSQL($tableName) .
+            '` WHERE `id_currency` = ' . pSQL($id);
+
+        return \Db::getInstance()->getValue($query);
+    }
+
+    /**
+     * @param $id
+     * @return false|string
+     */
     public function getManufacturerById($id)
     {
         $tableName = 'manufacturer';

@@ -4,6 +4,7 @@ namespace CleverReachIntegration\BusinessLogic\Services;
 
 use CleverReach\BusinessLogic\Group\Contracts\GroupService;
 use CleverReach\BusinessLogic\Language\Contracts\TranslationService;
+use CleverReach\BusinessLogic\Order\Contracts\OrderService;
 use CleverReach\BusinessLogic\Receiver\Contracts\ReceiverService;
 use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\CustomerService;
@@ -115,6 +116,9 @@ class DemoService implements DemoServiceInterface
 
         $translationService = ServiceRegister::getService(TranslationService::CLASS_NAME);
         $translationService->getSystemLanguage();
+
+//        $orderService = ServiceRegister::getService(OrderService::CLASS_NAME);
+//        $source = $orderService->getOrderSource(9);
         return "This is new message";
     }
 }

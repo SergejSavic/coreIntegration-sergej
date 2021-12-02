@@ -9,6 +9,10 @@ use CleverReachIntegration\BusinessLogic\Services\Receiver\GuestService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\SubscriberService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\VisitorService;
 
+/**
+ * Class SyncSettingsService
+ * @package CleverReachIntegration\BusinessLogic\Services\SyncSettings
+ */
 class SyncSettingsService extends BaseSyncSettingsService
 {
     /**

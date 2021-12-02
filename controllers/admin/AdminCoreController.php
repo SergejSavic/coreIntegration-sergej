@@ -61,7 +61,7 @@ class AdminCoreController extends ModuleAdminController
     public function initContent()
     {
         $url = Tools::getHttpHost(true) . __PS_BASE_URI__ . self::BASE_IMG_URL;
-        //(ServiceRegister::getService(\CleverReachIntegration\BusinessLogic\Services\DemoServiceInterface::CLASS_NAME))->getMessage();
+        (ServiceRegister::getService(\CleverReachIntegration\BusinessLogic\Services\DemoServiceInterface::CLASS_NAME))->getMessage();
 
         if ($this->queueItemRepository->isConnectTaskCompleted()) {
             /** @var SyncConfigService $syncConfigService */

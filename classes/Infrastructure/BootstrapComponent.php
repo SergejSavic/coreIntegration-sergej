@@ -48,6 +48,8 @@ use CleverReachIntegration\BusinessLogic\Repositories\BaseRepository;
 use CleverReach\BusinessLogic\Form\Entities\Form;
 use CleverReach\BusinessLogic\SyncSettings\Contracts\SyncSettingsService as BaseSyncSettings;
 use CleverReachIntegration\BusinessLogic\Services\SyncSettings\SyncSettingsService;
+use CleverReach\BusinessLogic\Order\Contracts\OrderService as OrderServiceInterface;
+use CleverReachIntegration\BusinessLogic\Services\Order\OrderService;
 
 /**
  * Class BootstrapComponent
@@ -200,6 +202,13 @@ class BootstrapComponent extends BusinessLogicBootstrap
             BaseSyncSettings::CLASS_NAME,
             function () {
                 return new SyncSettingsService();
+            }
+        );
+
+        ServiceRegister::registerService(
+            OrderServiceInterface::CLASS_NAME,
+            function () {
+                return new OrderService();
             }
         );
     }

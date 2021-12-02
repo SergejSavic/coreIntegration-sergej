@@ -106,7 +106,7 @@ abstract class ReceiverAbstractClass extends ReceiverService
      * @return OrderItem
      * @throws \PrestaShopDatabaseException
      */
-    protected function createOrderItem($order, $product)
+    public function createOrderItem($order, $product)
     {
         $orderItem = new OrderItem(
             $order['id_order'], $product['id_product'], $product['product_name']

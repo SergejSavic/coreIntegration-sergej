@@ -2,6 +2,16 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+use CleverReach\BusinessLogic\Receiver\Tasks\DeactivateReceiverTask;
+use CleverReachIntegration\Infrastructure\BootstrapComponent;
+use Logeecom\Infrastructure\ServiceRegister;
+use Logeecom\Infrastructure\TaskExecution\Exceptions\QueueStorageUnavailableException;
+use Logeecom\Infrastructure\TaskExecution\QueueService as BaseQueueService;
+use CleverReach\BusinessLogic\Configuration\Configuration;
+use CleverReach\BusinessLogic\Receiver\Tasks\Composite\ReceiverSyncTask;
+use CleverReach\BusinessLogic\Receiver\Tasks\Composite\Configuration\SyncConfiguration;
+use CleverReach\BusinessLogic\Order\Tasks\OrderItemsSyncTask;
+
 if (!defined('_PS_VERSION_')) {
     return false;
 }
@@ -11,6 +21,11 @@ if (!defined('_PS_VERSION_')) {
  */
 class Core extends Module
 {
+    /** @var BaseQueueService $queueService */
+    private $queueService;
+    /** @var Configuration $configService */
+    private $configService;
+
     /**
      * @var array[]
      */
@@ -133,6 +148,55 @@ class Core extends Module
     }
 
     /**
+     * @param $params
+     * @throws QueueStorageUnavailableException
+     */
+    public function hookActionObjectCustomerAddBefore($params)
+    {
+        $this->initServices();
+        $email = $params['object']->email;
+
+        $this->queueService->enqueue($this->configService->getDefaultQueueName(), new ReceiverSyncTask(new SyncConfiguration(array($email))));
+    }
+
+    /**
+     * @param $params
+     * @throws QueueStorageUnavailableException
+     */
+    public function hookActionObjectCustomerUpdateBefore($params)
+    {
+        $this->initServices();
+        $email = $params['object']->email;
+
+        $this->queueService->enqueue($this->configService->getDefaultQueueName(), new ReceiverSyncTask(new SyncConfiguration(array($email))));
+    }
+
+    /**
+     * @param $params
+     * @throws QueueStorageUnavailableException
+     */
+    public function hookActionValidateOrder($params)
+    {
+        $this->initServices();
+        $orderId = $params['order']->id;
+        $email = $params['customer']->email;
+
+        $this->queueService->enqueue($this->configService->getDefaultQueueName(), new OrderItemsSyncTask($orderId, $email));
+    }
+
+    /**
+     * @param $params
+     * @throws QueueStorageUnavailableException
+     */
+    public function hookActionObjectCustomerDeleteBefore($params)
+    {
+        $this->initServices();
+        $email = $params['object']->email;
+
+        $this->queueService->enqueue($this->configService->getDefaultQueueName(), new DeactivateReceiverTask($email));
+    }
+
+    /**
      * Sets css and js files for admin controllers
      */
     private function initControllerAssets()
@@ -154,9 +218,25 @@ class Core extends Module
     /**
      * @return bool
      */
+    private function initServices()
+    {
+        BootstrapComponent::init();
+        $this->configService = ServiceRegister::getService(Configuration::CLASS_NAME);
+        $this->queueService = ServiceRegister::getService(BaseQueueService::CLASS_NAME);
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
     private function registerHooksMethod()
     {
-        return $this->registerHook('displayBackOfficeHeader');
+        return $this->registerHook('displayBackOfficeHeader')
+            && $this->registerHook('actionObjectCustomerAddBefore')
+            && $this->registerHook('actionObjectCustomerUpdateBefore')
+            && $this->registerHook('actionValidateOrder')
+            && $this->registerHook('actionObjectCustomerDeleteBefore');
     }
 }
 
