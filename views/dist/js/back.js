@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     let syncButton = document.getElementById('submit-btn-sync');
     let interval;
     let queueInterval;
-    let initialSyncInterval;
+    let syncInterval;
 
     if (loginButton !== null) {
         loginButton.addEventListener('click', function () {
@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
     }
 
     if (containerSync !== null) {
-        initialSyncInterval = setInterval(checkInitialSyncStatus, 500);
+        syncInterval = setInterval(function() { checkSyncStatus('InitialSyncTask'); }, 500);
     }
 
     function checkIfConnectTaskIsCompleted() {
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         });
     }
 
-    function checkInitialSyncStatus() {
+    function checkSyncStatus(taskType) {
         $.ajax({
             type: 'POST',
             cache: false,
@@ -72,7 +72,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
             url: adminAjaxLink,
             data: {
                 ajax: true,
-                action: 'checkinitialsyncstatus'
+                action: 'checksyncstatus',
+                taskType: taskType
             },
             success: function (data) {
                 console.log(data);
@@ -89,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
         } else {
             spanSyncStatus.classList.remove('in-progress-sync');
             syncButton.classList.remove('disable');
-            clearInterval(initialSyncInterval);
+            clearInterval(syncInterval);
             if (data === DONE) {
                 spanSyncStatus.classList.add('done-sync');
                 data = 'DONE';
@@ -97,7 +98,26 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 spanSyncStatus.classList.add('error-sync');
                 data = 'ERROR';
             }
+            syncButton.addEventListener("click", synchronize);
         }
         spanSyncStatus.innerHTML = data;
+    }
+
+    function synchronize() {
+        spanSyncStatus.classList.remove('done-sync');
+        spanSyncStatus.classList.remove('error-sync');
+        spanSyncStatus.classList.add('in-progress-sync');
+        spanSyncStatus.innerHTML = 'IN PROGRESS';
+        syncInterval = setInterval(function() { checkSyncStatus('SecondarySyncTask'); }, 500);
+        $.ajax({
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            url: adminAjaxLink,
+            data: {
+                ajax: true,
+                action: 'synchronize'
+            }
+        });
     }
 });

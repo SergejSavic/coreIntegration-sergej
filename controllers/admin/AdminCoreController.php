@@ -3,6 +3,7 @@
 use CleverReach\BusinessLogic\Authorization\Contracts\AuthorizationService;
 use CleverReach\BusinessLogic\InitialSynchronization\Tasks\Composite\InitialSyncTask;
 use CleverReach\BusinessLogic\Receiver\DTO\Config\SyncService;
+use CleverReach\BusinessLogic\SecondarySynchronization\Tasks\Composite\SecondarySyncTask;
 use CleverReachIntegration\BusinessLogic\Repositories\ConfigRepository;
 use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\CustomerService;
@@ -31,6 +32,10 @@ class AdminCoreController extends ModuleAdminController
     private $queueItemRepository;
     /** @var ConfigRepository $configRepository */
     private $configRepository;
+    /** @var BaseQueueService $queueService */
+    private $queueService;
+    /** @var Configuration $configService */
+    private $configService;
 
     /**
      * Initializes bootstrap and queue item repository
@@ -42,6 +47,8 @@ class AdminCoreController extends ModuleAdminController
         $this->bootstrap = true;
         BootstrapComponent::init();
         $this->queueItemRepository = RepositoryRegistry::getRepository(QueueItem::CLASS_NAME);
+        $this->queueService = ServiceRegister::getService(BaseQueueService::CLASS_NAME);
+        $this->configService = ServiceRegister::getService(Configuration::CLASS_NAME);
         parent::__construct();
     }
 
@@ -54,13 +61,7 @@ class AdminCoreController extends ModuleAdminController
     public function initContent()
     {
         $url = Tools::getHttpHost(true) . __PS_BASE_URI__ . self::BASE_IMG_URL;
-        /** @var BaseQueueService $queueService */
-        $queueService = ServiceRegister::getService(BaseQueueService::CLASS_NAME);
-        /** @var Configuration $configService */
-        $configService = ServiceRegister::getService(Configuration::CLASS_NAME);
-
         //(ServiceRegister::getService(\CleverReachIntegration\BusinessLogic\Services\DemoServiceInterface::CLASS_NAME))->getMessage();
-        //(new \CleverReach\BusinessLogic\SecondarySynchronization\Tasks\Composite\SecondarySyncTask())->execute();
 
         if ($this->queueItemRepository->isConnectTaskCompleted()) {
             /** @var SyncConfigService $syncConfigService */
@@ -72,7 +73,7 @@ class AdminCoreController extends ModuleAdminController
             $this->setTemplateFile('syncPage.tpl', array('clientID' => $userInfo->getId(), 'headerImage' => $url . 'logo_cleverreach.svg'));
 
             if (!$this->queueItemRepository->isInitialSyncCompleted()) {
-                $queueService->enqueue($configService->getDefaultQueueName(), new InitialSyncTask());
+                $this->queueService->enqueue($this->configService->getDefaultQueueName(), new InitialSyncTask());
             }
 
         } else {
@@ -107,11 +108,19 @@ class AdminCoreController extends ModuleAdminController
      * @throws PrestaShopDatabaseException
      * @throws QueryFilterInvalidParamException
      */
-    public function ajaxProcessCheckInitialSyncStatus()
+    public function ajaxProcessCheckSyncStatus()
     {
-        $syncStatus = $this->queueItemRepository->checkInitialSyncStatus();
+        $syncStatus = $this->queueItemRepository->checkSyncStatus($_POST['taskType']);
         echo json_encode($syncStatus);
         exit;
+    }
+
+    /**
+     * @throws QueueStorageUnavailableException
+     */
+    public function ajaxProcessSynchronize()
+    {
+        $this->queueService->enqueue($this->configService->getDefaultQueueName(), new SecondarySyncTask());
     }
 
     /**

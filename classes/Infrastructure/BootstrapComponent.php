@@ -46,6 +46,8 @@ use CleverReachIntegration\BusinessLogic\Services\ReceiverEvents\ReceiverEventsS
 use CleverReachIntegration\BusinessLogic\Services\FormEvents\FormEventsService as FormEvents;
 use CleverReachIntegration\BusinessLogic\Repositories\BaseRepository;
 use CleverReach\BusinessLogic\Form\Entities\Form;
+use CleverReach\BusinessLogic\SyncSettings\Contracts\SyncSettingsService as BaseSyncSettings;
+use CleverReachIntegration\BusinessLogic\Services\SyncSettings\SyncSettingsService;
 
 /**
  * Class BootstrapComponent
@@ -191,6 +193,13 @@ class BootstrapComponent extends BusinessLogicBootstrap
             FormEventsService::CLASS_NAME,
             function () {
                 return new FormEvents();
+            }
+        );
+
+        ServiceRegister::registerService(
+            BaseSyncSettings::CLASS_NAME,
+            function () {
+                return new SyncSettingsService();
             }
         );
     }
