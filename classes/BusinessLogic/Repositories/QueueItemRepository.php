@@ -166,7 +166,24 @@ class QueueItemRepository extends BaseRepository implements QueueItemRepositoryI
      * @throws QueryFilterInvalidParamException
      * @throws \PrestaShopDatabaseException
      */
-    public function isInitialSyncIsCompleted()
+    public function isConnectTaskQueued()
+    {
+        $filter = new QueryFilter();
+        $filter->where('taskType', Operators::EQUALS, 'ConnectTask');
+        $filter->where('status', Operators::EQUALS, 'queued');
+        $filter->orderBy('id', QueryFilter::ORDER_DESC);
+
+        $queueItem = $this->selectOne($filter);
+
+        return $queueItem !== null;
+    }
+
+    /**
+     * @return bool
+     * @throws QueryFilterInvalidParamException
+     * @throws \PrestaShopDatabaseException
+     */
+    public function isInitialSyncCompleted()
     {
         $filter = new QueryFilter();
         $filter->where('taskType', Operators::EQUALS, 'InitialSyncTask');

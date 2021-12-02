@@ -26,7 +26,7 @@ class CoreAuthorizationModuleFrontController extends ModuleFrontController
     }
 
     /**
-     * @throws PrestaShopException
+     * enqueues connect task
      */
     public function initContent()
     {

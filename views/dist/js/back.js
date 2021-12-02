@@ -8,12 +8,14 @@ document.addEventListener("DOMContentLoaded", function (event) {
     let spanSyncStatus = document.getElementById('span-sync-status');
     let syncButton = document.getElementById('submit-btn-sync');
     let interval;
+    let queueInterval;
     let initialSyncInterval;
 
     if (loginButton !== null) {
         loginButton.addEventListener('click', function () {
             myWindow = window.open(cleverReachURL, 'popUpWindow', 'location=yes,height=570,width=900,scrollbars=yes,status=yes');
-            interval = setInterval(checkIfConnectTaskIsCompleted, 10);
+            interval = setInterval(checkIfConnectTaskIsCompleted, 500);
+            queueInterval = setInterval(checkIfConnectTaskIsQueued, 250);
         });
     }
 
@@ -32,10 +34,31 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 action: 'checkifconnecttaskiscompleted'
             },
             success: function (data) {
+                console.log(data);
                 if (data === true) {
                     myWindow.close();
                     clearInterval(interval);
                     location.reload();
+                }
+            }
+        });
+    }
+
+    function checkIfConnectTaskIsQueued() {
+        $.ajax({
+            type: 'POST',
+            cache: false,
+            dataType: 'json',
+            url: adminAjaxLink,
+            data: {
+                ajax: true,
+                action: 'checkifconnecttaskisqueued'
+            },
+            success: function (data) {
+                console.log(data);
+                if (data === true) {
+                    myWindow.close();
+                    clearInterval(queueInterval);
                 }
             }
         });

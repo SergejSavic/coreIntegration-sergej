@@ -21,7 +21,7 @@ class CoreCallbackModuleFrontController extends ModuleFrontController
     }
 
     /**
-     * @throws PrestaShopException
+     * starts async process service
      */
     public function initContent()
     {

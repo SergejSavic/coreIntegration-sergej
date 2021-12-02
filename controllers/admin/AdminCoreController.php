@@ -59,18 +59,22 @@ class AdminCoreController extends ModuleAdminController
         /** @var Configuration $configService */
         $configService = ServiceRegister::getService(Configuration::CLASS_NAME);
 
+        //(ServiceRegister::getService(\CleverReachIntegration\BusinessLogic\Services\DemoServiceInterface::CLASS_NAME))->getMessage();
+        //(new \CleverReach\BusinessLogic\SecondarySynchronization\Tasks\Composite\SecondarySyncTask())->execute();
+
         if ($this->queueItemRepository->isConnectTaskCompleted()) {
             /** @var SyncConfigService $syncConfigService */
             $syncConfigService = ServiceRegister::getService(SyncConfigService::CLASS_NAME);
             $enabledServices = $this->prepareServices();
             $syncConfigService->setEnabledServices($enabledServices);
 
-            if (!$this->queueItemRepository->isInitialSyncIsCompleted()) {
+            $userInfo = (ServiceRegister::getService(AuthorizationService::CLASS_NAME))->getUserInfo();
+            $this->setTemplateFile('syncPage.tpl', array('clientID' => $userInfo->getId(), 'headerImage' => $url . 'logo_cleverreach.svg'));
+
+            if (!$this->queueItemRepository->isInitialSyncCompleted()) {
                 $queueService->enqueue($configService->getDefaultQueueName(), new InitialSyncTask());
             }
-            $userInfo = (ServiceRegister::getService(AuthorizationService::CLASS_NAME))->getUserInfo();
 
-            $this->setTemplateFile('syncPage.tpl', array('clientID' => $userInfo->getId(), 'headerImage' => $url . 'logo_cleverreach.svg'));
         } else {
             $this->setTemplateFile('origin.tpl', array('headerImage' => $url . 'logo_cleverreach.svg', 'contentImage' => $url . 'icon_hello.png'));
         }
@@ -84,6 +88,17 @@ class AdminCoreController extends ModuleAdminController
     public function ajaxProcessCheckIfConnectTaskIsCompleted()
     {
         $response = $this->queueItemRepository->isConnectTaskCompleted();
+        echo json_encode($response);
+        exit;
+    }
+
+    /**
+     * @throws PrestaShopDatabaseException
+     * @throws QueryFilterInvalidParamException
+     */
+    public function ajaxProcessCheckIfConnectTaskIsQueued()
+    {
+        $response = $this->queueItemRepository->isConnectTaskQueued();
         echo json_encode($response);
         exit;
     }

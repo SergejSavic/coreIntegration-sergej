@@ -106,9 +106,9 @@ class DemoService implements DemoServiceInterface
 //        $groupService = ServiceRegister::getService(GroupService::CLASS_NAME);
 //        $name = $groupService->getBlacklistedEmailsSuffix();
 
-        $visitorService = ServiceRegister::getService(VisitorService::THIS_CLASS_NAME);
-        $visitors = $visitorService->getReceiverBatch(array('lakik@mail.com', 'haydu@mail.com'), false);
-        $emails = $visitorService->getReceiverEmails();
+//        $visitorService = ServiceRegister::getService(VisitorService::THIS_CLASS_NAME);
+//        $visitors = $visitorService->getReceiver('lakik@mail.com');
+//        $emails = $visitorService->getReceiverEmails();
 //        $subscriberService = ServiceRegister::getService(SubscriberService::THIS_CLASS_NAME);
 //        $subscriberService->getReceiverBatch(array('pub@prestashop.com', 'milica@mail.com', 'ivanmarko@mail.com', 'nikola@mail.com', 'lakik@mail.com'));
 //        $subscriberService->getReceiverEmails();
