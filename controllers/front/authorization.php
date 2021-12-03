@@ -32,7 +32,6 @@ class CoreAuthorizationModuleFrontController extends ModuleFrontController
     {
         /** @var Configuration $configService */
         $configService = ServiceRegister::getService(Configuration::CLASS_NAME);
-
         $code = Tools::getValue('code');
 
         if ($code) {

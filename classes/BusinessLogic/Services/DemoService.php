@@ -11,6 +11,7 @@ use CleverReachIntegration\BusinessLogic\Services\Receiver\CustomerService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\GuestService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\SubscriberService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\VisitorService;
+use DateTime;
 use Logeecom\Infrastructure\Configuration\ConfigEntity;
 use CleverReach\BusinessLogic\Configuration\Configuration;
 use Logeecom\Infrastructure\Logger\Logger;
@@ -28,6 +29,7 @@ use Logeecom\Infrastructure\TaskExecution\QueueItem;
 use Logeecom\Infrastructure\TaskExecution\QueueService as BaseQueueService;
 use Logeecom\Infrastructure\AutoTest\AutoTestTask;
 use CleverReachIntegration\BusinessLogic\BasicTask;
+
 
 class DemoService implements DemoServiceInterface
 {
@@ -80,9 +82,9 @@ class DemoService implements DemoServiceInterface
 //        $filter->where('id', Operators::EQUALS, '15');
 //        $filter->orderBy('name', QueryFilter::ORDER_DESC);
 //        $filter->setLimit(2);
-        //$filter->setOffset(1);
-        /** @var ConfigEntity $configEntity */
-        //$configEntity = $repository->selectOne($filter);
+//        $filter->setOffset(1);
+//        /** @var ConfigEntity $configEntity */
+//        $configEntity = $repository->selectOne($filter);
 
         $asyncProcessService = ServiceRegister::getService(AsyncProcessService::CLASS_NAME);
 
@@ -119,6 +121,9 @@ class DemoService implements DemoServiceInterface
 
 //        $orderService = ServiceRegister::getService(OrderService::CLASS_NAME);
 //        $source = $orderService->getOrderSource(9);
+        $format = 'Y-m-d H:i:s';
+        $date = DateTime::createFromFormat($format, '2021-10-13 11:36:23');
+        $name = '';
         return "This is new message";
     }
 }

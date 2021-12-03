@@ -1,4 +1,5 @@
 <head></head>
+<div id="loader" class="hide"></div>
 <body id="container-body">
 <div id="container" class="container border">
     <img id="header-image" class="header-image" src={$headerImage}>

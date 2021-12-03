@@ -20,7 +20,7 @@ class AuthorizationService extends BaseService
      */
     public function getRedirectURL($isRefresh = false)
     {
-        return Tools::getHttpHost(true) . __PS_BASE_URI__ . 'en/module/core/authorization'. '?XDEBUG_SESSION_START=debug';
+        return Tools::getHttpHost(true) . __PS_BASE_URI__ . 'en/module/core/authorization' . '?XDEBUG_SESSION_START=debug';
     }
 
     /**

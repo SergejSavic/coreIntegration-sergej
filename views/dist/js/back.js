@@ -10,6 +10,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
     let interval;
     let queueInterval;
     let syncInterval;
+    let loader = document.getElementById('loader');
+    let adminPageBody = document.getElementById('container-body');
 
     if (loginButton !== null) {
         loginButton.addEventListener('click', function () {
@@ -58,6 +60,8 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 console.log(data);
                 if (data === true) {
                     myWindow.close();
+                    loader.classList.remove('hide');
+                    adminPageBody.classList.add('opacity');
                     clearInterval(queueInterval);
                 }
             }
