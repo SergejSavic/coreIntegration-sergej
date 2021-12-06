@@ -4,7 +4,6 @@ use CleverReach\BusinessLogic\Authorization\Contracts\AuthorizationService;
 use CleverReach\BusinessLogic\InitialSynchronization\Tasks\Composite\InitialSyncTask;
 use CleverReach\BusinessLogic\Receiver\DTO\Config\SyncService;
 use CleverReach\BusinessLogic\SecondarySynchronization\Tasks\Composite\SecondarySyncTask;
-use CleverReachIntegration\BusinessLogic\Repositories\ConfigRepository;
 use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\CustomerService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\GuestService;
@@ -30,8 +29,6 @@ class AdminCoreController extends ModuleAdminController
     const BASE_IMG_URL = 'modules/cleverreach/views/img/';
     /** @var QueueItemRepository $queueItemRepository */
     private $queueItemRepository;
-    /** @var ConfigRepository $configRepository */
-    private $configRepository;
     /** @var BaseQueueService $queueService */
     private $queueService;
     /** @var Configuration $configService */

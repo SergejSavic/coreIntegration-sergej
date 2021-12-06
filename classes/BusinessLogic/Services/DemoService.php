@@ -6,6 +6,7 @@ use CleverReach\BusinessLogic\Group\Contracts\GroupService;
 use CleverReach\BusinessLogic\Language\Contracts\TranslationService;
 use CleverReach\BusinessLogic\Order\Contracts\OrderService;
 use CleverReach\BusinessLogic\Receiver\Contracts\ReceiverService;
+use CleverReachIntegration\BusinessLogic\Repositories\PrestaShopRepository;
 use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\CustomerService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\GuestService;
@@ -124,6 +125,17 @@ class DemoService implements DemoServiceInterface
         $format = 'Y-m-d H:i:s';
         $date = DateTime::createFromFormat($format, '2021-10-13 11:36:23');
         $name = '';
+
+//        $email = 'lakik@mail.com';
+//        $res = (new PrestaShopRepository())->update('customer', array('newsletter' => 1), 'email='. "'". $email. "'");
+
+//        $receiver = array("email" => 'tomamona@mail.com', 'id_gender' => 1, 'firstname' => 'toma', 'lastname' => 'nikolic', 'birthday' => '1960-05-20');
+//        $res = (new PrestaShopRepository())->insert('customer', $receiver);
+
+//        $receiver = array("email" => 'simonmig@mail.com', 'id_gender' => 1, 'firstname' => 'simon', 'lastname' => 'mignolet',
+//            'birthday' => '1992-05-10', 'newsletter' => 1);
+//        $res = (new PrestaShopRepository())->insert('customer', $receiver);
+
         return "This is new message";
     }
 }

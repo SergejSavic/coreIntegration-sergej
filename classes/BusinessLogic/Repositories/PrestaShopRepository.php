@@ -206,6 +206,28 @@ class PrestaShopRepository
     }
 
     /**
+     * @param string $table
+     * @param array $data
+     * @param string $where
+     * @return bool
+     */
+    public function update($table, $data, $where)
+    {
+        return \Db::getInstance()->update($table, $data, $where);
+    }
+
+    /**
+     * @param string $table
+     * @param array $data
+     * @return bool
+     * @throws \PrestaShopDatabaseException
+     */
+    public function insert($table, $data)
+    {
+        return \Db::getInstance()->insert($table, $data);
+    }
+
+    /**
      * @param $id
      * @return array|bool|\mysqli_result|\PDOStatement|resource|null
      * @throws \PrestaShopDatabaseException

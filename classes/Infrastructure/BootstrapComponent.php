@@ -9,6 +9,7 @@ use CleverReach\BusinessLogic\Form\FormEventsService;
 use CleverReach\BusinessLogic\Language\Contracts\TranslationService as TranslationServiceInterface;
 use CleverReach\BusinessLogic\Mailing\Contracts\DefaultMailingService;
 use CleverReach\BusinessLogic\Receiver\ReceiverEventsService;
+use CleverReach\BusinessLogic\Receiver\WebHooks\Handler as ReceiverHandler;
 use CleverReach\BusinessLogic\Segment\Contracts\SegmentService as SegmentServiceInterface;
 use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
 use CleverReach\BusinessLogic\Configuration\Configuration;
@@ -50,6 +51,8 @@ use CleverReach\BusinessLogic\SyncSettings\Contracts\SyncSettingsService as Base
 use CleverReachIntegration\BusinessLogic\Services\SyncSettings\SyncSettingsService;
 use CleverReach\BusinessLogic\Order\Contracts\OrderService as OrderServiceInterface;
 use CleverReachIntegration\BusinessLogic\Services\Order\OrderService;
+use CleverReachIntegration\BusinessLogic\Services\EventsHandler\ReceiverEventsHandler;
+
 
 /**
  * Class BootstrapComponent
@@ -211,6 +214,16 @@ class BootstrapComponent extends BusinessLogicBootstrap
                 return new OrderService();
             }
         );
+
+        ServiceRegister::registerService(
+            ReceiverEventsHandler::CLASS_NAME,
+            function () {
+                /** @var ReceiverEventsService $receiverEventsService */
+                $receiverEventsService = ServiceRegister::getService(ReceiverEventsService::CLASS_NAME);
+                $handler = ServiceRegister::getService(ReceiverHandler::CLASS_NAME);
+                return new ReceiverEventsHandler($receiverEventsService, $handler);
+            }
+        );
     }
 
     /**
@@ -225,6 +238,22 @@ class BootstrapComponent extends BusinessLogicBootstrap
         RepositoryRegistry::registerRepository(Process::CLASS_NAME, ProcessRepository::getClassName());
         RepositoryRegistry::registerRepository(QueueItem::CLASS_NAME, QueueItemRepository::getClassName());
         RepositoryRegistry::registerRepository(Form::CLASS_NAME, BaseRepository::getClassName());
+    }
+
+    /**
+     * Initializes webhook handlers
+     */
+    public static function initWebhookHandlers()
+    {
+        parent::initWebHookHandlers();
+
+        ServiceRegister::registerService(
+            ReceiverHandler::CLASS_NAME,
+            function () {
+                return new ReceiverHandler();
+            }
+        );
+
     }
 
 }
