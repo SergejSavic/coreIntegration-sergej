@@ -6,10 +6,8 @@ use CleverReach\BusinessLogic\WebHookEvent\Contracts\EventsService;
 use CleverReach\BusinessLogic\Receiver\WebHooks\Handler as ReceiverHandler;
 use CleverReach\BusinessLogic\WebHookEvent\DTO\WebHook;
 use CleverReach\BusinessLogic\WebHookEvent\Exceptions\UnableToHandleWebHookException;
-use CleverReachIntegration\BusinessLogic\Repositories\PrestaShopRepository;
 use CleverReachIntegration\BusinessLogic\Services\HTTP\Request;
 use Logeecom\Infrastructure\Logger\Logger;
-
 
 /**
  * Class ReceiverEventsHandler
@@ -88,7 +86,15 @@ class ReceiverEventsHandler
             return 400;
         }
 
-        (new PrestaShopRepository())->update('customer', array('newsletter' => 1), 'email=' . "'" . $requestBody['email'] . "'");
+        if ($requestBody['event'] === 'receiver.subscribed' || $requestBody['event'] === 'receiver.unsubscribed') {
+            $webHook = new WebHook($requestBody['condition'], $requestBody['event'], $requestBody['payload']);
+
+            try {
+                $this->handler->handle($webHook);
+            } catch (UnableToHandleWebHookException $e) {
+                Logger::logError($e->getMessage(), 'Integration');
+            }
+        }
 
         return 200;
     }

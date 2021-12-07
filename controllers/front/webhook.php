@@ -29,15 +29,9 @@ class CoreWebhookModuleFrontController extends ModuleFrontController
      */
     public function initContent()
     {
-        $this->context->smarty->assign(
-            array(
-                'message' => 'message'
-            ));
-
-        $this->setTemplate('module:core/views/templates/front/webhook.tpl');
         $request = new Request();
         $response = $this->receiverEventsHandler->handleRequest($request);
-        self::diePlain($response['verificationToken']);
+        self::diePlain($response['verificationToken'], $response['httpCode']);
     }
 
     /**

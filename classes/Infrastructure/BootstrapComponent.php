@@ -8,11 +8,16 @@ use CleverReach\BusinessLogic\Field\Contracts\FieldService as FieldServiceInterf
 use CleverReach\BusinessLogic\Form\FormEventsService;
 use CleverReach\BusinessLogic\Language\Contracts\TranslationService as TranslationServiceInterface;
 use CleverReach\BusinessLogic\Mailing\Contracts\DefaultMailingService;
+use CleverReach\BusinessLogic\Receiver\Events\ReceiverEventBus;
+use CleverReach\BusinessLogic\Receiver\Events\ReceiverSubscribedEvent;
+use CleverReach\BusinessLogic\Receiver\Events\ReceiverUnsubscribedEvent;
 use CleverReach\BusinessLogic\Receiver\ReceiverEventsService;
 use CleverReach\BusinessLogic\Receiver\WebHooks\Handler as ReceiverHandler;
 use CleverReach\BusinessLogic\Segment\Contracts\SegmentService as SegmentServiceInterface;
 use CleverReachIntegration\BusinessLogic\Repositories\QueueItemRepository;
 use CleverReach\BusinessLogic\Configuration\Configuration;
+use CleverReachIntegration\BusinessLogic\Services\Listener\ReceiverSubscribeListener;
+use CleverReachIntegration\BusinessLogic\Services\Listener\ReceiverUnsubscribeListener;
 use CleverReachIntegration\BusinessLogic\Services\Mailing\MailingService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\CustomerService;
 use CleverReachIntegration\BusinessLogic\Services\Receiver\GuestService;
@@ -26,9 +31,7 @@ use Logeecom\Infrastructure\Configuration\ConfigEntity;
 use Logeecom\Infrastructure\ORM\RepositoryRegistry;
 use Logeecom\Infrastructure\ServiceRegister;
 use CleverReachIntegration\BusinessLogic\Services\Logger\LoggerService;
-use CleverReachIntegration\BusinessLogic\Services\DemoService;
 use CleverReachIntegration\BusinessLogic\Services\ConfigService as ConfigurationService;
-use CleverReachIntegration\BusinessLogic\Services\DemoServiceInterface;
 use Logeecom\Infrastructure\Serializer\Concrete\JsonSerializer;
 use Logeecom\Infrastructure\Serializer\Serializer;
 use Logeecom\Infrastructure\TaskExecution\Process;
@@ -74,13 +77,6 @@ class BootstrapComponent extends BusinessLogicBootstrap
     public static function initServices()
     {
         parent::initServices();
-
-        ServiceRegister::registerService(
-            DemoServiceInterface::CLASS_NAME,
-            function () {
-                return new DemoService();
-            }
-        );
 
         ServiceRegister::registerService(
             Configuration::CLASS_NAME,
@@ -253,7 +249,21 @@ class BootstrapComponent extends BusinessLogicBootstrap
                 return new ReceiverHandler();
             }
         );
+    }
 
+    public static function initEvents()
+    {
+        parent::initEvents();
+
+        ReceiverEventBus::getInstance()->when(
+            ReceiverSubscribedEvent::CLASS_NAME,
+            ReceiverSubscribeListener::CLASS_NAME . '::handle'
+        );
+
+        ReceiverEventBus::getInstance()->when(
+            ReceiverUnsubscribedEvent::CLASS_NAME,
+            ReceiverUnsubscribeListener::CLASS_NAME . '::handle'
+        );
     }
 
 }

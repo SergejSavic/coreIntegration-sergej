@@ -1,10 +1,10 @@
 <?php
 
-namespace CleverReachIntegration\BusinessLogic\Services;
+namespace CleverReachIntegration\BusinessLogic\Services\Transformer;
 
 /**
  * Class TransformerService
- * @package CleverReachIntegration\BusinessLogic\Services
+ * @package CleverReachIntegration\BusinessLogic\Services\Transformer
  */
 class TransformerService
 {

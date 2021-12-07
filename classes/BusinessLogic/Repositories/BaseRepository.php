@@ -2,7 +2,7 @@
 
 namespace CleverReachIntegration\BusinessLogic\Repositories;
 
-use CleverReachIntegration\BusinessLogic\Services\TransformerService;
+use CleverReachIntegration\BusinessLogic\Services\Transformer\TransformerService;
 use Logeecom\Infrastructure\ORM\Entity;
 use Logeecom\Infrastructure\ORM\Exceptions\QueryFilterInvalidParamException;
 use Logeecom\Infrastructure\ORM\Interfaces\RepositoryInterface;
