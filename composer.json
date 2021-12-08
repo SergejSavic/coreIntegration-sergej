@@ -6,6 +6,9 @@
       "CleverReach\\": "vendor/cleverreach/src/BusinessLogic"
     }
   },
+  "config": {
+    "prepend-autoloader": false
+  },
   "repositories": [
     {
       "type": "vcs",
