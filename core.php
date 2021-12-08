@@ -26,6 +26,7 @@
 
 require_once rtrim(_PS_MODULE_DIR_, '/') . '/core/vendor/autoload.php';
 
+use CleverReach\BusinessLogic\Receiver\Tasks\DeactivateReceiverTask;
 use CleverReachIntegration\Infrastructure\BootstrapComponent;
 use Logeecom\Infrastructure\ServiceRegister;
 use Logeecom\Infrastructure\TaskExecution\Exceptions\QueueStorageUnavailableException;
@@ -216,7 +217,7 @@ class Core extends Module
         $this->initServices();
         $email = $params['object']->email;
 
-        $this->queueService->enqueue($this->configService->getDefaultQueueName(), new \CleverReach\BusinessLogic\Receiver\Tasks\DeactivateReceiverTask($email));
+        $this->queueService->enqueue($this->configService->getDefaultQueueName(), new DeactivateReceiverTask($email));
     }
 
     /**
