@@ -1,4 +1,4 @@
 /vendor/
 .idea/
 .htaccess
-.deploy.sh
+deploy.sh
